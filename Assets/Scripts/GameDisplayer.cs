@@ -6,8 +6,13 @@ public class GameDisplayer : MonoBehaviour {
 
 	void Start ()
     {
-        PhotonManager.instance.DisplayRooms();
+        PhotonManager.instance.OpenRooms = true;
 	}
-	
-	
+
+    private void OnDestroy()
+    {
+        PhotonManager.instance.OpenRooms = false;
+    }
+
+
 }

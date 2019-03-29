@@ -8,20 +8,11 @@ public class GameManager : Photon.MonoBehaviour
     private GameObject thisPlayer;
     private int numberOfImages = 5;
 
-    private GameObject goldParticles;
-
     private Dictionary<int, GameObject[]> images;
 
     private void Start()
     {
-        //find the players in the scene
-        players = FindObjectsOfType<HeadsetPlayer>(); //ATTENZIONE! questo metodo deve essere chiamato solo dopo che tutti i giocatori sono stai istanziati
-
-        Debug.Log(players.Length);
-
-        //only the main GameManager (not its PhotonViews) must spawn the images
-        if (this.gameObject.GetPhotonView().isMine)
-            SpawnRandomImages();
+        StartCoroutine("SetUpGame");
     }
 
     //generate a number of images equal to variable numberOfImages for both player in randomic position around them.
@@ -56,8 +47,8 @@ public class GameManager : Photon.MonoBehaviour
                 image.GetPhotonView().RPC("SetIndex", PhotonTargets.All, i);
 
                 if (player.gameObject.GetPhotonView().isMine)
-                    image.GetPhotonView().RPC("ChangeCircleColor", PhotonTargets.All, "blue");
-                else image.GetPhotonView().RPC("ChangeCircleColor", PhotonTargets.All, "red");
+                    image.GetPhotonView().RPC("ChangeCircleColor", PhotonTargets.All, 0f, 0f, 255f);
+                else image.GetPhotonView().RPC("ChangeCircleColor", PhotonTargets.All, 255f, 0f, 0f);
 
                 images[player.gameObject.GetPhotonView().ownerId][i] = image;
             }
@@ -71,17 +62,17 @@ public class GameManager : Photon.MonoBehaviour
     public void OnImageEnterGaze(int imageIndex, int playerId)
     {
         Debug.Log("Player " + playerId + " starts looking at image " + imageIndex);
-        bool sameImageGazed = true;
 
         images[playerId][imageIndex].GetComponent<Image>().IsGazed = true;
 
+
+        bool sameImageGazed = true;
         foreach (int player in images.Keys)
             if (images[player][imageIndex].GetComponent<Image>().IsGazed == false)
                 sameImageGazed = false;
 
         if (sameImageGazed)
             StartCoroutine("DestroyImage", imageIndex);
-
     }
 
     //called when a player stops looking at a image
@@ -94,10 +85,10 @@ public class GameManager : Photon.MonoBehaviour
             images[playerId][imageIndex].GetComponent<Image>().IsGazed = false;
         } catch (System.NullReferenceException e) { }
 
-        Debug.Log("STOP!");
-
         StopAllCoroutines();
-        //PhotonNetwork.Destroy(goldParticles);
+
+        foreach (int player in images.Keys)
+            images[player][imageIndex].GetPhotonView().RPC("StopAnimation", PhotonTargets.All);
     }
 
     IEnumerator DestroyImage(int imageIndex)
@@ -105,11 +96,25 @@ public class GameManager : Photon.MonoBehaviour
         Debug.Log("Destroying image " + imageIndex + "...");
 
         foreach (int player in images.Keys)
-            goldParticles = PhotonNetwork.Instantiate("GoldParticles", images[player][imageIndex].transform.position, Quaternion.identity, 0);
+            images[player][imageIndex].GetPhotonView().RPC("StartAnimation", PhotonTargets.All);
 
         yield return new WaitForSeconds(5);
 
         foreach (int player in images.Keys)
             images[player][imageIndex].GetPhotonView().RPC("AutoDestroy", PhotonTargets.All);
+    }
+
+    IEnumerator SetUpGame()
+    {
+        yield return new WaitForSeconds(3);
+
+        //find the players in the scene
+        players = FindObjectsOfType<HeadsetPlayer>(); //ATTENZIONE! questo metodo deve essere chiamato solo dopo che tutti i giocatori sono stai istanziati
+
+        Debug.Log(players.Length);
+
+        //only the main GameManager (not its PhotonViews) must spawn the images
+        if (this.gameObject.GetPhotonView().isMine)
+            SpawnRandomImages();
     }
 }

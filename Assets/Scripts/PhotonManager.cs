@@ -10,6 +10,8 @@ public class PhotonManager : Photon.MonoBehaviour
 
     private int playerCount;
 
+    public bool OpenRooms;
+
     void Awake()
     {
         if (instance == null)
@@ -68,16 +70,14 @@ public class PhotonManager : Photon.MonoBehaviour
         Debug.Log("Can't join any room!");
     }
 
-    public void DisplayRooms()
+    void OnReceivedRoomListUpdate()
     {
-        Debug.Log("We have received the Room list");
-
-        foreach (RoomInfo roomInfo in PhotonNetwork.GetRoomList())
-        {
-            GameObject joinRoomButton = Instantiate(Resources.Load<GameObject>("JoinRoomButton"), GameObject.Find("Canvas").transform);
-            joinRoomButton.transform.Find("Text").GetComponent<Text>().text = roomInfo.Name;
-        }
-            
+        if (OpenRooms)
+            foreach (RoomInfo roomInfo in PhotonNetwork.GetRoomList())
+            {
+                GameObject joinRoomButton = Instantiate(Resources.Load<GameObject>("JoinRoomButton"), GameObject.Find("Canvas").transform);
+                joinRoomButton.transform.Find("Text").GetComponent<Text>().text = roomInfo.Name;
+            }
     }
 
     void OnPhotonPlayerConnected(PhotonPlayer newPlayer)

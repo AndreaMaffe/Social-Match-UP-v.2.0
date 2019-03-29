@@ -4,16 +4,20 @@ using UnityEngine;
 
 public class Image : MonoBehaviour {
 
-    //from 0 to numberOfImages: used to check with image the player is looking at
-    private int index;
+    private int index; //from 0 to numberOfImages: used to check with image the player is looking at
     private Color originalColor;
-    public bool IsGazed { get; set; }
+    private Transform circle;
+    private GameObject goldenParticle;
     private PhotonView gameManagerView;
+
+    public bool IsGazed { get; set; }
 
 
     private void Start()
     {
         IsGazed = false;
+
+        goldenParticle = transform.Find("GoldenParticles").gameObject;
         gameManagerView = GameObject.Find("GameManager(Clone)").GetPhotonView();
     }
 
@@ -25,18 +29,30 @@ public class Image : MonoBehaviour {
     }
 
     [PunRPC]
-    public void ChangeCircleColor(string color)
+    public void ChangeCircleColor(float r, float g, float b)
     {
-        if (color == "blue")
-        transform.Find("Circle").GetComponent<SpriteRenderer>().color = Color.blue;
-        if (color == "red")
-            transform.Find("Circle").GetComponent<SpriteRenderer>().color = Color.red;
+        this.originalColor = new Color(r, g, b);
+        transform.Find("Circle").GetComponent<SpriteRenderer>().color = this.originalColor;
     }
 
     [PunRPC]
     public void SetIndex(int index)
     {
         this.index = index;
+    }
+
+    [PunRPC]
+    public void StartAnimation()
+    {
+        transform.Find("Circle").GetComponent<SpriteRenderer>().color = Color.yellow;
+        goldenParticle.SetActive(true);
+    }
+
+    [PunRPC]
+    public void StopAnimation()
+    {
+        transform.Find("Circle").GetComponent<SpriteRenderer>().color = this.originalColor;
+        goldenParticle.SetActive(false);
     }
 
     [PunRPC]

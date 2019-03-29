@@ -47,4 +47,6 @@ MonoBehaviour:
   - OnImageEnterGaze
   - OnImageExitGaze
   - AutoDestroy
+  - StartAnimation
+  - StopAnimation
   DisableAutoOpenWizard: 1
