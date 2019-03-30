@@ -24,6 +24,7 @@ public class Image : MonoBehaviour {
     [PunRPC]
 	public void SetSprite(string multipleSpriteName, int index)
     {
+        Debug.Log("Carico " + multipleSpriteName + "numero " + index);
         Sprite[] imageSprites = Resources.LoadAll<Sprite>(multipleSpriteName);
         GetComponent<SpriteRenderer>().sprite = imageSprites[index];
     }
@@ -44,6 +45,7 @@ public class Image : MonoBehaviour {
     [PunRPC]
     public void StartAnimation()
     {
+        //this.gameObject.GetPhotonView().RPC("ChangeCircleColor", PhotonTargets.All, 255f, 255f, 0f);
         transform.Find("Circle").GetComponent<SpriteRenderer>().color = Color.yellow;
         goldenParticle.SetActive(true);
     }

@@ -6,26 +6,29 @@ public class GameManager : Photon.MonoBehaviour
 {
     private HeadsetPlayer[] players;
     private GameObject thisPlayer;
-    private int numberOfImages = 5;
 
     private Dictionary<int, GameObject[]> images;
 
     private void Start()
     {
+        
+        Debug.Log("Tipo di immagini: " + PhotonManager.instance.ImageType + " - Numero di immagini: " + PhotonManager.instance.NumberOfImages);
         StartCoroutine("SetUpGame");
+        
     }
 
-    //generate a number of images equal to variable numberOfImages for both player in randomic position around them.
+    //generate a number of images equal to variable NumberOfImages for both player in randomic position around them.
     //The images are chosen randomly in the set of multiple sprites.
     private void SpawnRandomImages()
     {
         images = new Dictionary<int, GameObject[]>();
-
-        int numberOfPossibleImages = Resources.LoadAll<Sprite>("Pokemons").Length;
+        
+        int numberOfPossibleImages = Resources.LoadAll<Sprite>(PhotonManager.instance.ImageType).Length;
 
         //generate a list with random indexes of the sprites
         List<int> chosenImages = new List<int>();
-        while(chosenImages.Count < numberOfImages)
+
+        while(chosenImages.Count < PhotonManager.instance.NumberOfImages)
         {
             //generate random index
             int randomIndex = Random.Range(0, numberOfPossibleImages);
@@ -33,17 +36,17 @@ public class GameManager : Photon.MonoBehaviour
             if (!chosenImages.Contains(randomIndex))
                 chosenImages.Add(randomIndex);
         }
-
+        
         foreach (HeadsetPlayer player in players)
         {
-            images.Add(player.gameObject.GetPhotonView().ownerId, new GameObject[numberOfImages]);
+            images.Add(player.gameObject.GetPhotonView().ownerId, new GameObject[PhotonManager.instance.NumberOfImages]);
 
-            for (int i = 0; i < numberOfImages; i++)
+            for (int i = 0; i < PhotonManager.instance.NumberOfImages; i++)
             {
                 Vector3 imagePosition = player.transform.position + Random.insideUnitSphere * 3;
                 Quaternion imageRotation = Quaternion.LookRotation(player.transform.position - imagePosition);
                 GameObject image = PhotonNetwork.Instantiate("Image", imagePosition, imageRotation, 0);
-                image.GetPhotonView().RPC("SetSprite", PhotonTargets.All, "Pokemons", chosenImages[i]);
+                image.GetPhotonView().RPC("SetSprite", PhotonTargets.All, PhotonManager.instance.ImageType, chosenImages[i]);
                 image.GetPhotonView().RPC("SetIndex", PhotonTargets.All, i);
 
                 if (player.gameObject.GetPhotonView().isMine)
@@ -52,8 +55,7 @@ public class GameManager : Photon.MonoBehaviour
 
                 images[player.gameObject.GetPhotonView().ownerId][i] = image;
             }
-        }
-
+        }    
 
     }
 
@@ -111,10 +113,9 @@ public class GameManager : Photon.MonoBehaviour
         //find the players in the scene
         players = FindObjectsOfType<HeadsetPlayer>(); //ATTENZIONE! questo metodo deve essere chiamato solo dopo che tutti i giocatori sono stai istanziati
 
-        Debug.Log(players.Length);
-
         //only the main GameManager (not its PhotonViews) must spawn the images
         if (this.gameObject.GetPhotonView().isMine)
             SpawnRandomImages();
+           
     }
 }

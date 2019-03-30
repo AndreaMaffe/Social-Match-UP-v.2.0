@@ -8,6 +8,9 @@ public class PhotonManager : Photon.MonoBehaviour
 {
     public static PhotonManager instance = null;
 
+    public int NumberOfImages { get; set; }
+    public string ImageType { get; set; }
+
     private int playerCount;
 
     public bool OpenRooms;
@@ -59,9 +62,9 @@ public class PhotonManager : Photon.MonoBehaviour
         PhotonNetwork.room.IsVisible = true;
         Debug.Log("Connected to the room");
 
-        if (PhotonNetwork.room.PlayerCount == 2)
+        if (PhotonNetwork.room.PlayerCount == 2)  //se sei il secondo giocatore
         {
-            StartCoroutine(StartGame2());
+            StartCoroutine(StartGame());
         }
     }
 
@@ -80,11 +83,11 @@ public class PhotonManager : Photon.MonoBehaviour
             }
     }
 
-    void OnPhotonPlayerConnected(PhotonPlayer newPlayer)
+    void OnPhotonPlayerConnected(PhotonPlayer newPlayer) //se sei il primo giocatore
     {
         if (PhotonNetwork.room.PlayerCount == 2)
         {
-            StartCoroutine(StartGame());
+            StartCoroutine(StartGame2());
         }
     }
 
@@ -94,7 +97,7 @@ public class PhotonManager : Photon.MonoBehaviour
         PhotonNetwork.Instantiate("HeadsetPlayer", new Vector3(0, 3, -4), Quaternion.identity, 0);
     }
 
-    IEnumerator StartGame2() //crea un GameManager al secondo giocatore e una sua View in tutti i mondi
+    IEnumerator StartGame2() //crea un GameManager al primo giocatore e una sua View in tutti i mondi
     {
         yield return new WaitForSeconds(5f);
         PhotonNetwork.Instantiate("HeadsetPlayer", new Vector3(0, 3, 4), new Quaternion(0,1,0,0), 0);
