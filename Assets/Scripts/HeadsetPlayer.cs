@@ -28,5 +28,4 @@ public class HeadsetPlayer : MonoBehaviour {
             if (Input.GetKey(KeyCode.D))
                 transform.Rotate(Vector3.up, 1f);
     }
-
 }

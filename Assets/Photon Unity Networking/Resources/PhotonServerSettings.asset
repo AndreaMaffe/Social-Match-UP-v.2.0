@@ -49,4 +49,7 @@ MonoBehaviour:
   - AutoDestroy
   - StartAnimation
   - StopAnimation
+  - StartVictoryAnimations
+  - StartDestroyAnimation
+  - StopDestroyAnimation
   DisableAutoOpenWizard: 1

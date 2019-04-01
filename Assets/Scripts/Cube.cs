@@ -1,13 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.XR;
 
 public class Cube : MonoBehaviour {
 
-	public void DestroyGameManager()
-    {
-        PhotonView pw = GameObject.Find("GameManager(Clone)").GetComponent<PhotonView>();
-        pw.RPC("Autodestroy", PhotonTargets.All, null);
-    }
+  
 
 }

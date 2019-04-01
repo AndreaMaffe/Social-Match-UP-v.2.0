@@ -9,10 +9,10 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 32c6841db8641ca43a6ef12435e3379c
   - enabled: 0
-    path: Assets/Scenes/Gameplay.unity
+    path: Assets/Scenes/Voice example.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Scenes/Gameplay2.unity
+    path: Assets/Scenes/Gameplay.unity
     guid: 1a44bdbe6d94bb04d8569623d55b3406
   - enabled: 0
     path: Assets/Scenes/VRTesting.unity

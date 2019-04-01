@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.XR;
 
 public class PhotonManager : Photon.MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class PhotonManager : Photon.MonoBehaviour
     {
         DontDestroyOnLoad(this.gameObject);
         PhotonNetwork.ConnectUsingSettings("1");
+        OpenRooms = true;
 
     }
 
@@ -58,36 +60,62 @@ public class PhotonManager : Photon.MonoBehaviour
 
     public void OnJoinedRoom()
     {
-        SceneManager.LoadScene("Gameplay2");
         PhotonNetwork.room.IsVisible = true;
         Debug.Log("Connected to the room");
+        SceneManager.LoadScene("Gameplay");
 
         if (PhotonNetwork.room.PlayerCount == 2)  //se sei il secondo giocatore
         {
             StartCoroutine(StartGame());
+            StartCoroutine(SwitchVROn());
         }
     }
 
-    void OnPhotonJoinRoomFailed()
+    void OnReceivedRoomList()
     {
-        Debug.Log("Can't join any room!");
+        foreach (GameObject roomButton in GameObject.FindGameObjectsWithTag("JoinRoomButton"))
+            Destroy(roomButton);
+
+        if (OpenRooms)
+        {
+            int i = 0;
+
+            foreach (RoomInfo roomInfo in PhotonNetwork.GetRoomList())
+            {
+                GameObject joinRoomButton = Instantiate(Resources.Load<GameObject>("JoinRoomButton"), GameObject.Find("Canvas").transform);
+                joinRoomButton.GetComponent<RectTransform>().Translate(Vector2.down * i);
+                joinRoomButton.transform.Find("Text").GetComponent<Text>().text = roomInfo.Name;
+                i += 30;
+            }
+        }
     }
 
     void OnReceivedRoomListUpdate()
     {
+        foreach (GameObject roomButton in GameObject.FindGameObjectsWithTag("JoinRoomButton"))
+            Destroy(roomButton);
+
         if (OpenRooms)
+        {
+            int i = 0;
+
             foreach (RoomInfo roomInfo in PhotonNetwork.GetRoomList())
             {
                 GameObject joinRoomButton = Instantiate(Resources.Load<GameObject>("JoinRoomButton"), GameObject.Find("Canvas").transform);
+                joinRoomButton.GetComponent<RectTransform>().Translate(Vector2.down * i);
                 joinRoomButton.transform.Find("Text").GetComponent<Text>().text = roomInfo.Name;
+                i += 30;
             }
+        }
+
     }
 
     void OnPhotonPlayerConnected(PhotonPlayer newPlayer) //se sei il primo giocatore
     {
         if (PhotonNetwork.room.PlayerCount == 2)
         {
-            StartCoroutine(StartGame2());
+            StartCoroutine(StartGameAndInstantiateGameManager());
+            StartCoroutine(SwitchVROn());
         }
     }
 
@@ -97,11 +125,18 @@ public class PhotonManager : Photon.MonoBehaviour
         PhotonNetwork.Instantiate("HeadsetPlayer", new Vector3(0, 3, -4), Quaternion.identity, 0);
     }
 
-    IEnumerator StartGame2() //crea un GameManager al primo giocatore e una sua View in tutti i mondi
+    IEnumerator StartGameAndInstantiateGameManager() //crea un GameManager al primo giocatore e una sua View in tutti i mondi
     {
         yield return new WaitForSeconds(5f);
         PhotonNetwork.Instantiate("HeadsetPlayer", new Vector3(0, 3, 4), new Quaternion(0,1,0,0), 0);
         PhotonNetwork.Instantiate("GameManager", Vector3.zero, Quaternion.identity, 0);
+    }
+
+    private IEnumerator SwitchVROn()
+    {
+        XRSettings.LoadDeviceByName("cardboard");
+        yield return null;
+        XRSettings.enabled = true;
     }
 
 }

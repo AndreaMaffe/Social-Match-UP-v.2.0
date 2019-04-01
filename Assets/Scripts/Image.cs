@@ -9,6 +9,7 @@ public class Image : MonoBehaviour {
     private Transform circle;
     private GameObject goldenParticle;
     private PhotonView gameManagerView;
+    public Animator animator;
 
     public bool IsGazed { get; set; }
 
@@ -43,15 +44,14 @@ public class Image : MonoBehaviour {
     }
 
     [PunRPC]
-    public void StartAnimation()
+    public void StartDestroyAnimation()
     {
-        //this.gameObject.GetPhotonView().RPC("ChangeCircleColor", PhotonTargets.All, 255f, 255f, 0f);
         transform.Find("Circle").GetComponent<SpriteRenderer>().color = Color.yellow;
         goldenParticle.SetActive(true);
     }
 
     [PunRPC]
-    public void StopAnimation()
+    public void StopDestroyAnimation()
     {
         transform.Find("Circle").GetComponent<SpriteRenderer>().color = this.originalColor;
         goldenParticle.SetActive(false);
@@ -60,16 +60,19 @@ public class Image : MonoBehaviour {
     [PunRPC]
     public void AutoDestroy()
     {
+        AudioManager.instance.PlayDingSound();
         Destroy(this.gameObject);
     }
 
     public void OnEnterGaze()
     {
+        animator.SetBool("Gazed", true);
         gameManagerView.RPC("OnImageEnterGaze", this.gameObject.GetPhotonView().owner, index, PhotonNetwork.player.ID);
     }
 
     public void OnExitGaze()
     {
+        animator.SetBool("Gazed", false);
         gameManagerView.RPC("OnImageExitGaze", this.gameObject.GetPhotonView().owner, index, PhotonNetwork.player.ID);
     }
 }
