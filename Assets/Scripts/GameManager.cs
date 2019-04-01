@@ -137,8 +137,8 @@ public class GameManager : Photon.MonoBehaviour
         yield return new WaitForSeconds(1);
         AudioManager.instance.PlayHurraySound();
         yield return new WaitForSeconds(1);
-        AudioManager.instance.PlayFireworksSound();
-        Instantiate(Resources.Load<GameObject>("Fireworks"), Vector3.up * 15, Quaternion.identity);
+        //AudioManager.instance.PlayFireworksSound();
+        Instantiate(Resources.Load<GameObject>("Fireworks"), Vector3.up * 30, Quaternion.identity);
         yield return new WaitForSeconds(1);
         AudioManager.instance.StopBackgroundMusic();
         yield return new WaitForSeconds(3);

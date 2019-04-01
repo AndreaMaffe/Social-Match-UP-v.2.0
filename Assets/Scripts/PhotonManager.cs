@@ -11,10 +11,9 @@ public class PhotonManager : Photon.MonoBehaviour
 
     public int NumberOfImages { get; set; }
     public string ImageType { get; set; }
+    public RoomInfo[] RoomInfo { get; set; }
 
     private int playerCount;
-
-    public bool OpenRooms;
 
     void Awake()
     {
@@ -28,8 +27,6 @@ public class PhotonManager : Photon.MonoBehaviour
     {
         DontDestroyOnLoad(this.gameObject);
         PhotonNetwork.ConnectUsingSettings("1");
-        OpenRooms = true;
-
     }
 
     public void OnConnectedToMaster()
@@ -73,41 +70,12 @@ public class PhotonManager : Photon.MonoBehaviour
 
     void OnReceivedRoomList()
     {
-        foreach (GameObject roomButton in GameObject.FindGameObjectsWithTag("JoinRoomButton"))
-            Destroy(roomButton);
-
-        if (OpenRooms)
-        {
-            int i = 0;
-
-            foreach (RoomInfo roomInfo in PhotonNetwork.GetRoomList())
-            {
-                GameObject joinRoomButton = Instantiate(Resources.Load<GameObject>("JoinRoomButton"), GameObject.Find("Canvas").transform);
-                joinRoomButton.GetComponent<RectTransform>().Translate(Vector2.down * i);
-                joinRoomButton.transform.Find("Text").GetComponent<Text>().text = roomInfo.Name;
-                i += 30;
-            }
-        }
+        RoomInfo = PhotonNetwork.GetRoomList();
     }
 
     void OnReceivedRoomListUpdate()
     {
-        foreach (GameObject roomButton in GameObject.FindGameObjectsWithTag("JoinRoomButton"))
-            Destroy(roomButton);
-
-        if (OpenRooms)
-        {
-            int i = 0;
-
-            foreach (RoomInfo roomInfo in PhotonNetwork.GetRoomList())
-            {
-                GameObject joinRoomButton = Instantiate(Resources.Load<GameObject>("JoinRoomButton"), GameObject.Find("Canvas").transform);
-                joinRoomButton.GetComponent<RectTransform>().Translate(Vector2.down * i);
-                joinRoomButton.transform.Find("Text").GetComponent<Text>().text = roomInfo.Name;
-                i += 30;
-            }
-        }
-
+        RoomInfo = PhotonNetwork.GetRoomList();
     }
 
     void OnPhotonPlayerConnected(PhotonPlayer newPlayer) //se sei il primo giocatore
