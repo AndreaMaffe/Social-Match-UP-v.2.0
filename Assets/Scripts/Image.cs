@@ -17,9 +17,8 @@ public class Image : MonoBehaviour {
     private void Start()
     {
         IsGazed = false;
-
         goldenParticle = transform.Find("GoldenParticles").gameObject;
-        gameManagerView = GameObject.Find("GameManager(Clone)").GetPhotonView();
+        gameManagerView = GameObject.Find("ClassicGameManager(Clone)").GetPhotonView();
     }
 
     [PunRPC]
@@ -67,12 +66,12 @@ public class Image : MonoBehaviour {
     public void OnEnterGaze()
     {
         animator.SetBool("Gazed", true);
-        gameManagerView.RPC("OnImageEnterGaze", this.gameObject.GetPhotonView().owner, index, PhotonNetwork.player.ID);
+        gameManagerView.RPC("OnImageEnterGaze", gameManagerView.owner, index, PhotonNetwork.player.ID);
     }
 
     public void OnExitGaze()
     {
         animator.SetBool("Gazed", false);
-        gameManagerView.RPC("OnImageExitGaze", this.gameObject.GetPhotonView().owner, index, PhotonNetwork.player.ID);
+        gameManagerView.RPC("OnImageExitGaze", gameManagerView.owner, index, PhotonNetwork.player.ID);
     }
 }

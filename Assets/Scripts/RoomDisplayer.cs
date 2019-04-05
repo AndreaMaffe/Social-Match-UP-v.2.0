@@ -5,21 +5,22 @@ using UnityEngine.UI;
 
 public class RoomDisplayer : MonoBehaviour
 {
-    private float time;
+    private float timer;
 
     private void Start()
     {
-        time = 0;
+        timer = 0;  
         DisplayRooms();
     }
 
+    //Update the room status every 2 seconds
     private void Update()
     {
-        time += Time.deltaTime;
-        if(time >= 2f)
+        timer += Time.deltaTime;
+        if(timer >= 2f)
         {
             DisplayRooms();
-            time = 0;
+            timer = 0;
         }
     }
 

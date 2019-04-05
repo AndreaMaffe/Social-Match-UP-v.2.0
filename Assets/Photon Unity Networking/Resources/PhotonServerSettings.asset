@@ -52,4 +52,12 @@ MonoBehaviour:
   - StartVictoryAnimations
   - StartDestroyAnimation
   - StopDestroyAnimation
+  - OnMissingPieceEnterGaze
+  - OnMissingPieceExitGaze
+  - OnPieceEnterGaze
+  - OnPieceExitGaze
+  - OnBrokenPieceEnterGaze
+  - OnBrokenPieceExitGaze
+  - Fixed
+  - Fix
   DisableAutoOpenWizard: 1

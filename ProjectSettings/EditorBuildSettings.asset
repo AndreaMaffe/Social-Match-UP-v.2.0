@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Voice example.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Scenes/Gameplay.unity
+    path: Assets/Scenes/ClassicGameplayHills.unity
     guid: 1a44bdbe6d94bb04d8569623d55b3406
   - enabled: 0
     path: Assets/Scenes/VRTesting.unity
@@ -21,6 +21,12 @@ EditorBuildSettings:
     path: Assets/Scenes/OpenGames.unity
     guid: d5cd5e3d1ff1c974d99062f12c2c08ed
   - enabled: 1
-    path: Assets/Scenes/GameModeSelection.unity
+    path: Assets/Scenes/NewGameMenu.unity
     guid: 01fec5eca250540429712fbf72ef7b0a
+  - enabled: 1
+    path: Assets/Scenes/FixingGameplayCastle.unity
+    guid: ce98e5266f4a7c34c9fed2c634a03b30
+  - enabled: 1
+    path: Assets/Scenes/FixingGameplayHills.unity
+    guid: 0b5ac3dd963e0ce48a3f84e7bd373715
   m_configObjects: {}

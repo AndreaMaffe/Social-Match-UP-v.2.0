@@ -5,10 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class EventManager : MonoBehaviour
 {
-
     public void OnBackToMainMenuButtonClicked()
     {
         SceneManager.LoadScene("MainMenu");
+        if (PhotonNetwork.inRoom)
+            PhotonNetwork.LeaveRoom();
     }
 
     public void OnOpenGamesButtonClicked()
@@ -18,6 +19,6 @@ public class EventManager : MonoBehaviour
 
     public void OnNewgameButtonClicked()
     {
-        SceneManager.LoadScene("GameModeSelection");
+        SceneManager.LoadScene("NewGameMenu");
     }
 }

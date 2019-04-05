@@ -9,11 +9,16 @@ public class PhotonManager : Photon.MonoBehaviour
 {
     public static PhotonManager instance = null;
 
-    public int NumberOfImages { get; set; }
-    public string ImageType { get; set; }
     public RoomInfo[] RoomInfo { get; set; }
 
-    private int playerCount;
+    public string Task;
+    public string Location;
+    public string ImageType;
+    public int NumberOfImages;
+    public byte NumberOfPlayers;
+
+
+    private int order;
 
     void Awake()
     {
@@ -27,6 +32,8 @@ public class PhotonManager : Photon.MonoBehaviour
     {
         DontDestroyOnLoad(this.gameObject);
         PhotonNetwork.ConnectUsingSettings("1");
+        order = 0;
+        PhotonNetwork.automaticallySyncScene = true;
     }
 
     public void OnConnectedToMaster()
@@ -40,6 +47,7 @@ public class PhotonManager : Photon.MonoBehaviour
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.IsVisible = true;
         roomOptions.IsOpen = true;
+        roomOptions.MaxPlayers = NumberOfPlayers;
         
         PhotonNetwork.CreateRoom(roomName, roomOptions, PhotonNetwork.lobby);
     }
@@ -49,23 +57,10 @@ public class PhotonManager : Photon.MonoBehaviour
         PhotonNetwork.JoinRoom(RoomName);
     }
 
-    public void OnJoinedLobby()
-    {
-        Debug.Log("Connected to the lobby " + PhotonNetwork.lobby.Name);
-        Debug.Log("Number of rooms: " + PhotonNetwork.countOfRooms);
-    }
-
     public void OnJoinedRoom()
     {
-        PhotonNetwork.room.IsVisible = true;
-        Debug.Log("Connected to the room");
-        SceneManager.LoadScene("Gameplay");
-
-        if (PhotonNetwork.room.PlayerCount == 2)  //se sei il secondo giocatore
-        {
-            StartCoroutine(StartGame());
-            StartCoroutine(SwitchVROn());
-        }
+        order = PhotonNetwork.room.PlayerCount;
+        OnPhotonPlayerConnected(PhotonNetwork.player);
     }
 
     void OnReceivedRoomList()
@@ -78,26 +73,44 @@ public class PhotonManager : Photon.MonoBehaviour
         RoomInfo = PhotonNetwork.GetRoomList();
     }
 
-    void OnPhotonPlayerConnected(PhotonPlayer newPlayer) //se sei il primo giocatore
+    //called by every client when a player joins the room
+    void OnPhotonPlayerConnected(PhotonPlayer newPlayer) 
     {
-        if (PhotonNetwork.room.PlayerCount == 2)
+        if (PhotonNetwork.room.PlayerCount == PhotonNetwork.room.MaxPlayers) //if all the players are connected
         {
-            StartCoroutine(StartGameAndInstantiateGameManager());
+            switch(order)
+            {
+                case 1: PhotonNetwork.SetMasterClient(PhotonNetwork.player);
+                        PhotonNetwork.LoadLevel(Task + "Gameplay" + Location);
+                        StartCoroutine(StartGameAndInstantiateGameManager());
+                        break;
+                case 2: StartCoroutine(StartGameAsPlayer());
+                        break;
+                case 3: StartCoroutine(StartGameAsHelper());
+                        break;
+            }
+
             StartCoroutine(SwitchVROn());
         }
     }
 
-    IEnumerator StartGame()
+    IEnumerator StartGameAsPlayer()
     {
         yield return new WaitForSeconds(5f);
         PhotonNetwork.Instantiate("HeadsetPlayer", new Vector3(0, 3, -4), Quaternion.identity, 0);
+    }
+
+    IEnumerator StartGameAsHelper()
+    {
+        yield return new WaitForSeconds(5f);
+        PhotonNetwork.Instantiate("Helper", new Vector3(-4, 3, 0), new Quaternion(0, 0.707f, 0, 0.707f), 0);
     }
 
     IEnumerator StartGameAndInstantiateGameManager() //crea un GameManager al primo giocatore e una sua View in tutti i mondi
     {
         yield return new WaitForSeconds(5f);
         PhotonNetwork.Instantiate("HeadsetPlayer", new Vector3(0, 3, 4), new Quaternion(0,1,0,0), 0);
-        PhotonNetwork.Instantiate("GameManager", Vector3.zero, Quaternion.identity, 0);
+        PhotonNetwork.Instantiate(Task + "GameManager", Vector3.zero, Quaternion.identity, 0);
     }
 
     private IEnumerator SwitchVROn()
