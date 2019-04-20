@@ -21,7 +21,7 @@ public class DraggableObject : MonoBehaviour
     {
         if (dragging)
         {
-            transform.position = camTransform.position + camTransform.forward * 3;
+            transform.position = camTransform.position + camTransform.forward * (3+ Mathf.Abs(transform.position.x/2f));
 
             if (Mathf.Abs((transform.position - lastFramePosition).magnitude) < 0.05f)
                 StartCoroutine("Drop");

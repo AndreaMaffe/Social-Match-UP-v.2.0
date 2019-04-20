@@ -28,6 +28,7 @@ public class OrderingGameManager : MonoBehaviour
                 thisPlayer = player.gameObject;
 
         gameObject.GetPhotonView().RPC("SpawnObjects", PhotonTargets.All, numberOfObjects);
+        SpawnAnchorPoints();
     }
 
     [PunRPC]
@@ -47,6 +48,15 @@ public class OrderingGameManager : MonoBehaviour
 
         SpriteRenderer endGamePanel = thisPlayer.transform.Find("BlackPanel").GetComponent<SpriteRenderer>();
         endGamePanel.color = Color.black;
+    }
+
+    void SpawnAnchorPoints()
+    {
+        for (int i=0; i<numberOfObjects; i++)
+        {
+            PhotonNetwork.Instantiate("AnchorPoint", new Vector3(numberOfObjects * -0.75f + 0.75f + 1.5f * i, 1.7f, 7), Quaternion.identity, 0);
+            PhotonNetwork.Instantiate("AnchorPoint", new Vector3(numberOfObjects * -0.75f + 0.75f + 1.5f * i, 1.7f, -7), Quaternion.identity, 0);
+        }
     }
 
     [PunRPC]
