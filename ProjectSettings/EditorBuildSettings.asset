@@ -24,9 +24,15 @@ EditorBuildSettings:
     path: Assets/Scenes/NewGameMenu.unity
     guid: 01fec5eca250540429712fbf72ef7b0a
   - enabled: 1
-    path: Assets/Scenes/FixingGameplayCastle.unity
+    path: Assets/Scenes/FixingGameplayGarage.unity
     guid: ce98e5266f4a7c34c9fed2c634a03b30
   - enabled: 1
-    path: Assets/Scenes/FixingGameplayHills.unity
+    path: Assets/Scenes/FixingGameplayHouse.unity
     guid: 0b5ac3dd963e0ce48a3f84e7bd373715
+  - enabled: 1
+    path: Assets/Scenes/ClassicGameplayCastle.unity
+    guid: 33196b6d62c75ab47b7d0dba6b6b6ce2
+  - enabled: 1
+    path: Assets/Scenes/OrderingGameplayHouse.unity
+    guid: f87e32be4b4059f48af7fc2e87579e86
   m_configObjects: {}

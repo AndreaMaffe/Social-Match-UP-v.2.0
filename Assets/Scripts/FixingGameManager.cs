@@ -15,31 +15,28 @@ public class FixingGameManager : Photon.MonoBehaviour
     Transform pieces;
     Transform brokenPieces;
 
+    int numberOfFixedPieces;
+
     private void Start()
     {
         AudioManager.instance.PlayBackgroundMusic();
-        StartCoroutine("SetUpGame");        
+        StartCoroutine("SetUpGame");
+        numberOfFixedPieces = 0;
+        pieces = GameObject.Find("Pieces").transform;
+        brokenPieces = GameObject.Find("BrokenPieces").transform;
     }
 
     //initial setup, called at task launch
     IEnumerator SetUpGame()
     {
-        yield return new WaitForSeconds(6); //wait a bit to give to each client the time to instantiate their player (otherwise only one player is found)
+        yield return new WaitForSeconds(10); //wait a bit to give to each client the time to instantiate their player (otherwise only one player is found)
 
-        pieces = GameObject.Find("Pieces").transform;
-        brokenPieces = GameObject.Find("BrokenPieces").transform;
-        
         //find the players in the scene
         players = GameObject.FindGameObjectsWithTag("MainCamera");
+
         foreach (GameObject player in players)
             if (player.GetPhotonView().isMine)
                 thisPlayer = player.gameObject;
-
-        Debug.Log(players.Length + " players");
-
-        //only the main GameManager (not its PhotonViews) must spawn the images
-        if (this.gameObject.GetPhotonView().isMine)
-            ;//SpawnRandomImages();
     }
 
     [PunRPC]
@@ -52,12 +49,9 @@ public class FixingGameManager : Photon.MonoBehaviour
     {
         yield return new WaitForSeconds(1);
         AudioManager.instance.PlayHurraySound();
-        yield return new WaitForSeconds(1);
-        //AudioManager.instance.PlayFireworksSound();
-        Instantiate(Resources.Load<GameObject>("Fireworks"), Vector3.up * 30, Quaternion.identity);
-        yield return new WaitForSeconds(1);
-        AudioManager.instance.StopBackgroundMusic();
         yield return new WaitForSeconds(3);
+        AudioManager.instance.StopBackgroundMusic();
+        yield return new WaitForSeconds(2);
         AudioManager.instance.PlayVictorySound();
 
         SpriteRenderer endGamePanel = thisPlayer.transform.Find("BlackPanel").GetComponent<SpriteRenderer>();
@@ -71,8 +65,6 @@ public class FixingGameManager : Photon.MonoBehaviour
 
         if (this.pieceGazed == this.brokenPieceGazed)
             StartCoroutine(Fix(pieceName));
-
-        Debug.Log("Player starts looking at " + pieceName);
     }
 
     [PunRPC]
@@ -80,8 +72,6 @@ public class FixingGameManager : Photon.MonoBehaviour
     {
         this.pieceGazed = "<nothing>";
         StopAllCoroutines();
-
-        Debug.Log("Player stops looking at " + pieceName);
     }
 
     [PunRPC]
@@ -91,8 +81,6 @@ public class FixingGameManager : Photon.MonoBehaviour
 
         if (this.pieceGazed == this.brokenPieceGazed)
             StartCoroutine(Fix(brokenPieceName));
-
-        Debug.Log("Player starts looking at " + brokenPieceName);
     }
 
     [PunRPC]
@@ -100,23 +88,21 @@ public class FixingGameManager : Photon.MonoBehaviour
     {
         this.brokenPieceGazed = "<nothing>";
         StopAllCoroutines();
-
-        Debug.Log("Player stops looking at " + brokenPieceName);
-
     }
 
     IEnumerator Fix(string pieceName)
     {
-        Debug.Log("I start fixing " + pieceName + "!");
-
         yield return new WaitForSeconds(5);
 
-        Debug.Log("Fixing completed!");
-
-        PhotonNetwork.Destroy(pieces.Find(pieceName).gameObject.GetPhotonView());
-        brokenPieces.Find(pieceName).gameObject.GetPhotonView().RPC("Fix", PhotonTargets.All);
+        PhotonNetwork.Destroy(pieces.Find(pieceName).gameObject.GetPhotonView()); //make the fixer piece disappear
+        brokenPieces.Find(pieceName).gameObject.GetPhotonView().RPC("Fix", PhotonTargets.All); //fix the object
 
         AudioManager.instance.PlayDingSound();
+
+        numberOfFixedPieces++;
+
+        if (numberOfFixedPieces == 4)
+            this.gameObject.GetPhotonView().RPC("StartVictoryAnimations", PhotonTargets.All); //spostare sul player
     }
 
 

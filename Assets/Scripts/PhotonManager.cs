@@ -28,12 +28,21 @@ public class PhotonManager : Photon.MonoBehaviour
             Destroy(this);
     }
 
+
     void Start ()
     {
         DontDestroyOnLoad(this.gameObject);
         PhotonNetwork.ConnectUsingSettings("1");
         order = 0;
         PhotonNetwork.automaticallySyncScene = true;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
     }
 
     public void OnConnectedToMaster()
@@ -110,7 +119,7 @@ public class PhotonManager : Photon.MonoBehaviour
     {
         yield return new WaitForSeconds(5f);
         PhotonNetwork.Instantiate("HeadsetPlayer", new Vector3(0, 3, 4), new Quaternion(0,1,0,0), 0);
-        PhotonNetwork.Instantiate(Task + "GameManager", Vector3.zero, Quaternion.identity, 0);
+        PhotonNetwork.Instantiate("Managers/" + Task + "GameManager", Vector3.zero, Quaternion.identity, 0);
     }
 
     private IEnumerator SwitchVROn()

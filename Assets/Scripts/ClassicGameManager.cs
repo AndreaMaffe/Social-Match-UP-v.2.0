@@ -21,7 +21,7 @@ public class ClassicGameManager : Photon.MonoBehaviour
     //initial setup, called at task launch
     IEnumerator SetUpGame()
     {
-        yield return new WaitForSeconds(6); //since the HeadsetPlayer may not have been already created by other players, it's better to wait
+        yield return new WaitForSeconds(8); //since the HeadsetPlayer may not have been already created by other players, it's better to wait
 
         //find the players in the scene
         players = GameObject.FindGameObjectsWithTag("MainCamera");
@@ -123,7 +123,7 @@ public class ClassicGameManager : Photon.MonoBehaviour
         numberOfDestroyedImages++;
 
         if (numberOfDestroyedImages == PhotonManager.instance.NumberOfImages) 
-            gameObject.GetPhotonView().RPC("StartVictoryAnimations", PhotonTargets.All);
+            this.gameObject.GetPhotonView().RPC("StartVictoryAnimations", PhotonTargets.All);
     }
 
     [PunRPC]
@@ -138,10 +138,10 @@ public class ClassicGameManager : Photon.MonoBehaviour
         AudioManager.instance.PlayHurraySound();
         yield return new WaitForSeconds(1);
         //AudioManager.instance.PlayFireworksSound();
-        Instantiate(Resources.Load<GameObject>("Fireworks"), Vector3.up * 30, Quaternion.identity);
-        yield return new WaitForSeconds(1);
-        AudioManager.instance.StopBackgroundMusic();
+        //Instantiate(Resources.Load<GameObject>("Fireworks"), Vector3.up * 30, Quaternion.identity);
         yield return new WaitForSeconds(3);
+        AudioManager.instance.StopBackgroundMusic();
+        yield return new WaitForSeconds(1);
         AudioManager.instance.PlayVictorySound();
 
         SpriteRenderer endGamePanel = thisPlayer.transform.Find("BlackPanel").GetComponent<SpriteRenderer>();

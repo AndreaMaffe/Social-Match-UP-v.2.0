@@ -60,4 +60,6 @@ MonoBehaviour:
   - OnBrokenPieceExitGaze
   - Fixed
   - Fix
+  - SetColor
+  - SpawnObjects
   DisableAutoOpenWizard: 1

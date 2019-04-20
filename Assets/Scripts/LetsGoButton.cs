@@ -17,18 +17,27 @@ public class LetsGoButton : MonoBehaviour {
 
         task = GameObject.Find("TaskButton").transform.Find("Label").GetComponent<TextMeshProUGUI>().text;
         location = GameObject.Find("LocationButton").transform.Find("Label").GetComponent<TextMeshProUGUI>().text;
-        imagesType = GameObject.Find("ImagesButton").transform.Find("Label").GetComponent<TextMeshProUGUI>().text;
-        numberOfImages = GameObject.Find("NumberOfImagesButton").transform.Find("Label").GetComponent<TextMeshProUGUI>().text;
+
+        if (task == "Classic" || task == "Ordering")
+            numberOfImages = GameObject.Find("NumberOfImagesButton").transform.Find("Label").GetComponent<TextMeshProUGUI>().text;
+
+        if (task == "Classic")
+            imagesType = GameObject.Find("ImagesButton").transform.Find("Label").GetComponent<TextMeshProUGUI>().text;
 
         if (GameObject.Find("HelperToggle").GetComponent<Toggle>().isOn)
             numberOfPlayers = 3;
         else numberOfPlayers = 2;
 
         PhotonManager.instance.NumberOfPlayers = numberOfPlayers;
-        PhotonManager.instance.ImageType = imagesType;
+
+        if (task == "Classic" || task == "Ordering")
+            PhotonManager.instance.NumberOfImages = System.Convert.ToInt32(numberOfImages);
+
+        if (task == "Classic")
+            PhotonManager.instance.ImageType = imagesType;
+     
         PhotonManager.instance.Location = location;
         PhotonManager.instance.Task = task;
-        PhotonManager.instance.NumberOfImages = System.Convert.ToInt32(numberOfImages);
 
         PhotonManager.instance.CreateRoom(playerName + " (" + task + " - " + location + " - " + imagesType + ")");
     }
