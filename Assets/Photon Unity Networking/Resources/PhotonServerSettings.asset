@@ -62,4 +62,8 @@ MonoBehaviour:
   - Fix
   - SetColor
   - SpawnObjects
+  - OnObjectDropped
+  - OnObjectPositioned
+  - OnObjectRemoved
+  - SetNumberOfObjects
   DisableAutoOpenWizard: 1
