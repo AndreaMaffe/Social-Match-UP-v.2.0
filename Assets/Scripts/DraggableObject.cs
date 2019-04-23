@@ -80,7 +80,7 @@ public class DraggableObject : MonoBehaviour
             dragging = false;
             transform.position = other.transform.position;
             AudioManager.instance.PlayDingSound();
-            gameManagerView.RPC("OnObjectPositioned", gameManagerView.owner, PhotonNetwork.player.ID, this.index, other.gameObject.GetComponent<AnchorPoint>().Index);
+            gameManagerView.RPC("OnObjectPositioned", PhotonTargets.All, PhotonNetwork.player.ID, this.index, other.gameObject.GetComponent<AnchorPoint>().Index);
             
         }
     }
@@ -89,7 +89,7 @@ public class DraggableObject : MonoBehaviour
     {
         if (other.tag == "AnchorPoint" && gameObject.GetPhotonView().isMine)
         {
-            gameManagerView.RPC("OnObjectRemoved", gameManagerView.owner, PhotonNetwork.player.ID, other.gameObject.GetComponent<AnchorPoint>().Index);
+            gameManagerView.RPC("OnObjectRemoved", PhotonTargets.All, PhotonNetwork.player.ID, other.gameObject.GetComponent<AnchorPoint>().Index);
         }
     }
 
