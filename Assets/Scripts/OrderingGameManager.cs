@@ -44,7 +44,7 @@ public class OrderingGameManager : MonoBehaviour
                     combinationPlayer1 = new int[numberOfObjects];
                     combinationPlayer2 = new int[numberOfObjects];
 
-                    UpdateScore();
+                    this.gameObject.GetPhotonView().RPC("UpdateScore", PhotonTargets.All, "0/" + numberOfObjects);
                     SpawnAnchorPoints();
                 }
             }
@@ -77,19 +77,11 @@ public class OrderingGameManager : MonoBehaviour
         }
     }
 
-    void UpdateScore()
+    [PunRPC]
+    void UpdateScore(string scoreString)
     {
-        int numberOfCorrectObjects = 0;
-
-        for (int i = 0; i < numberOfObjects; i++)
-            if (combinationPlayer1[i] == combinationPlayer2[i] && combinationPlayer1[i] != 0 )
-                numberOfCorrectObjects++;
-
         foreach (GameObject score in scores)
-            score.GetComponent<TextMeshPro>().text = numberOfCorrectObjects + "/" + numberOfObjects;
-
-        if (numberOfCorrectObjects == numberOfObjects)
-            this.gameObject.GetPhotonView().RPC("StartVictoryAnimations", PhotonTargets.All);
+            score.GetComponent<TextMeshPro>().text = scoreString;
     }
 
     [PunRPC]
@@ -102,21 +94,36 @@ public class OrderingGameManager : MonoBehaviour
             else combinationPlayer2[anchorPointIndex] = objectIndex + 1;
         }
 
-        UpdateScore();
+        int numberOfCorrectObjects = 0;
+
+        for (int i = 0; i < numberOfObjects; i++)
+            if (combinationPlayer1[i] == combinationPlayer2[i] && combinationPlayer1[i] != 0)
+                numberOfCorrectObjects++;
+
+        this.gameObject.GetPhotonView().RPC("UpdateScore", PhotonTargets.All, numberOfCorrectObjects + "/" + numberOfObjects);
+
+        if (numberOfCorrectObjects == numberOfObjects)
+            this.gameObject.GetPhotonView().RPC("StartVictoryAnimations", PhotonTargets.All);
     }
 
     [PunRPC]
     public void OnObjectRemoved(int playerId, int anchorPointIndex)
     {
 
-        if (this.gameObject.GetPhotonView().isMine)
-        {
-            if (playerId == this.gameObject.GetPhotonView().ownerId)
-                combinationPlayer1[anchorPointIndex] = 0;
-            else combinationPlayer2[anchorPointIndex] = 0;
-        }
+        if (playerId == this.gameObject.GetPhotonView().ownerId)
+            combinationPlayer1[anchorPointIndex] = 0;
+        else combinationPlayer2[anchorPointIndex] = 0;
 
-        UpdateScore();
+        int numberOfCorrectObjects = 0;
+
+        for (int i = 0; i < numberOfObjects; i++)
+            if (combinationPlayer1[i] == combinationPlayer2[i] && combinationPlayer1[i] != 0)
+                numberOfCorrectObjects++;
+
+        this.gameObject.GetPhotonView().RPC("UpdateScore", PhotonTargets.All, numberOfCorrectObjects + "/" + numberOfObjects);
+
+        if (numberOfCorrectObjects == numberOfObjects)
+            this.gameObject.GetPhotonView().RPC("StartVictoryAnimations", PhotonTargets.All);
     }
 
     [PunRPC]

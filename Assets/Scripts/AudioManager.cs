@@ -11,6 +11,7 @@ public class AudioManager : MonoBehaviour
     private AudioClip fireworks;
     private AudioClip hurray;
     private AudioClip victory;
+    private AudioClip pop;
 
     private AudioSource audioSource;
 
@@ -33,6 +34,7 @@ public class AudioManager : MonoBehaviour
         fireworks = Resources.Load<AudioClip>("Sounds/FireworksSound");
         hurray = Resources.Load<AudioClip>("Sounds/Hurray!");
         victory = Resources.Load<AudioClip>("Sounds/Victory");
+        pop = Resources.Load<AudioClip>("Sounds/Pop");
 
         audioSource.clip = backgroundMusic;
         audioSource.volume = 0.4f;
@@ -67,6 +69,11 @@ public class AudioManager : MonoBehaviour
     public void PlayFireworksSound()
     {
         audioSource.PlayOneShot(fireworks, 10f);
+    }
+
+    public void PlayPopSound()
+    {
+        audioSource.PlayOneShot(pop, 1f);
     }
 
 }

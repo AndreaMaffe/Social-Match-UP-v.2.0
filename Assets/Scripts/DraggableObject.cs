@@ -8,12 +8,11 @@ public class DraggableObject : MonoBehaviour
     private Rigidbody rb;
     private bool dragging;
     private Vector3 lastFramePosition;
-
-    [SerializeField]
     private int index;
-
     private PhotonView gameManagerView;
 
+    private GameObject anchorPoint;
+    public GameObject light;
     private Color[] colors = new Color[] { Color.red, Color.green, Color.blue, Color.yellow, Color.cyan, Color.magenta, Color.white };
 
     void Start ()
@@ -33,7 +32,7 @@ public class DraggableObject : MonoBehaviour
             if (transform.position.y < 0.7f)
                 transform.position = new Vector3(transform.position.x, 0.7f, transform.position.z);
 
-            if (Mathf.Abs((transform.position - lastFramePosition).magnitude) < 0.05f)
+            if (Mathf.Abs((transform.position - lastFramePosition).magnitude) < 0.06f)
                 StartCoroutine("Drop");
 
             else StopAllCoroutines();
@@ -64,32 +63,37 @@ public class DraggableObject : MonoBehaviour
     private IEnumerator Drag()
     {
         yield return new WaitForSeconds(3);
+        AudioManager.instance.PlayPopSound();
         dragging = true;
+        light.SetActive(true);
+
+        if (anchorPoint != null && gameObject.GetPhotonView().isMine)
+        {
+            gameManagerView.RPC("OnObjectRemoved", gameManagerView.owner, PhotonNetwork.player.ID, anchorPoint.GetComponent<AnchorPoint>().Index);
+            anchorPoint.GetComponent<AnchorPoint>().anchoredObject = null;
+            anchorPoint = null;
+        }
+
     }
 
     private IEnumerator Drop()
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(5);
         dragging = false;
+        light.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "AnchorPoint" && gameObject.GetPhotonView().isMine)
+        if (other.tag == "AnchorPoint" && gameObject.GetPhotonView().isMine && other.GetComponent<AnchorPoint>().anchoredObject == null)
         {
             dragging = false;
-            transform.position = other.transform.position;
+            light.SetActive(false);
             AudioManager.instance.PlayDingSound();
+            other.GetComponent<AnchorPoint>().anchoredObject = this.gameObject;
+            this.anchorPoint = other.gameObject;
             gameManagerView.RPC("OnObjectPositioned", PhotonTargets.All, PhotonNetwork.player.ID, this.index, other.gameObject.GetComponent<AnchorPoint>().Index);
             
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.tag == "AnchorPoint" && gameObject.GetPhotonView().isMine)
-        {
-            gameManagerView.RPC("OnObjectRemoved", PhotonTargets.All, PhotonNetwork.player.ID, other.gameObject.GetComponent<AnchorPoint>().Index);
         }
     }
 
@@ -99,5 +103,8 @@ public class DraggableObject : MonoBehaviour
         this.index = index;
         GetComponent<MeshRenderer>().material.color = colors[index];
         transform.Find("Tip").gameObject.GetComponent<MeshRenderer>().material.color = colors[index];
+        light.SetActive(true);
+        light.GetComponent<Light>().color = colors[index];
+        light.SetActive(false);
     }
 }

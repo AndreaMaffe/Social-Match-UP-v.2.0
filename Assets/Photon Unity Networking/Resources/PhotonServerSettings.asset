@@ -66,4 +66,5 @@ MonoBehaviour:
   - OnObjectPositioned
   - OnObjectRemoved
   - SetNumberOfObjects
+  - UpdateScore
   DisableAutoOpenWizard: 1
