@@ -37,14 +37,6 @@ public class PhotonManager : Photon.MonoBehaviour
         PhotonNetwork.automaticallySyncScene = true;
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyUp(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
-    }
-
     public void OnConnectedToMaster()
     {
         Debug.Log("Connected to the server");

@@ -35,4 +35,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/OrderingGameplayHouse.unity
     guid: f87e32be4b4059f48af7fc2e87579e86
+  - enabled: 1
+    path: Assets/Scenes/ChangingRoom.unity
+    guid: 0ca4fa3b3a9036044b3e254902b94ddc
   m_configObjects: {}

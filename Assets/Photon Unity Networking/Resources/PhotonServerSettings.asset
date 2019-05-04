@@ -67,4 +67,5 @@ MonoBehaviour:
   - OnObjectRemoved
   - SetNumberOfObjects
   - UpdateScore
+  - LoadChosenAvatar
   DisableAutoOpenWizard: 1

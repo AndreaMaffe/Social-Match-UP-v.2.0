@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.XR;
 
 public class EventManager : MonoBehaviour
 {
@@ -21,4 +22,11 @@ public class EventManager : MonoBehaviour
     {
         SceneManager.LoadScene("NewGameMenu");
     }
+
+    public void OnChangingRoomButtonClicked()
+    {
+        SceneManager.LoadScene("ChangingRoom");
+    }
+
+
 }
