@@ -6,7 +6,7 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance = null;
 
-    private AudioClip backgroundMusic;
+    private AudioClip backgroundMusic, mainMenuMusic;
     private AudioClip ding;
     private AudioClip fireworks;
     private AudioClip hurray;
@@ -30,19 +30,26 @@ public class AudioManager : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
 
         backgroundMusic = Resources.Load<AudioClip>("Sounds/Soundtrack");
+        mainMenuMusic = Resources.Load<AudioClip>("Sounds/MainMenuMusic");
         ding = Resources.Load<AudioClip>("Sounds/Ding");
         fireworks = Resources.Load<AudioClip>("Sounds/FireworksSound");
         hurray = Resources.Load<AudioClip>("Sounds/Hurray!");
         victory = Resources.Load<AudioClip>("Sounds/Victory");
         pop = Resources.Load<AudioClip>("Sounds/Pop");
 
-        audioSource.clip = backgroundMusic;
         audioSource.volume = 0.4f;
         audioSource.loop = true;
     }
 
     public void PlayBackgroundMusic()
     {
+        audioSource.clip = backgroundMusic;
+        audioSource.Play();
+    }
+
+    public void PlayMainMenuMusic()
+    {
+        audioSource.clip = mainMenuMusic;
         audioSource.Play();
     }
 

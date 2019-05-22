@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AnchorPoint : MonoBehaviour
 {
-    public int Index { get; private set; }
+    public int Index { get; private set; } //index used by the OrderingGameManager to keep trace of the position
 
     [SerializeField]
     public GameObject anchoredObject; //current object attached to the anchorPoint

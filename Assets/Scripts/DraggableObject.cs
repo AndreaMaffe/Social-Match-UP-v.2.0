@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class DraggableObject : MonoBehaviour
 {
@@ -19,7 +20,14 @@ public class DraggableObject : MonoBehaviour
     {
         camTransform = Camera.main.transform;
         rb = GetComponent<Rigidbody>();
-	}	
+
+        //disable the script and the event trigger if the object is not mine (in this way the other player cannot drag it)
+        if (GetComponent<PhotonView>().isMine == false)
+        {
+            this.GetComponent<EventTrigger>().enabled = false;
+            this.enabled = false;
+        }
+    }	
 
 	void Update ()
     {

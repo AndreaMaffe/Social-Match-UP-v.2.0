@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class OrderingGameManager : MonoBehaviour
 {
@@ -61,7 +62,7 @@ public class OrderingGameManager : MonoBehaviour
     {
         for (int i = 0; i < numberOfObjects; i++)
         {
-            GameObject draggableObject = PhotonNetwork.Instantiate("Balloon", thisPlayer.transform.position + Random.onUnitSphere, Quaternion.identity, 0);
+            GameObject draggableObject = PhotonNetwork.Instantiate("Balloon", thisPlayer.transform.position + Random.onUnitSphere*3, Quaternion.identity, 0);
             draggableObject.GetPhotonView().RPC("SetIndex", PhotonTargets.All, i);
         }
     }
@@ -149,6 +150,9 @@ public class OrderingGameManager : MonoBehaviour
 
         SpriteRenderer endGamePanel = thisPlayer.transform.Find("BlackPanel").GetComponent<SpriteRenderer>();
         endGamePanel.color = Color.black;
+
+        yield return new WaitForSeconds(4);
+        SceneManager.LoadScene("MainMenu");
     }
 
 }

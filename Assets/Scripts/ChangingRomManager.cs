@@ -8,8 +8,10 @@ public class ChangingRomManager : MonoBehaviour
 {
     public GameObject[] choosableAvatars;
     public MirrorAvatar mirrorAvatar;
+
     private int page; //0 for the first set of avatars (0 -> 7), 8 for the second set (8 -> 15), ecc... 
-    private int numberOfAvatars;
+    private int numberOfAvatars; //overall number of available avatars in Resources/Avatars folder
+    private int chosenAvatarIndex;
 
 	void Start ()
     {
@@ -17,12 +19,15 @@ public class ChangingRomManager : MonoBehaviour
 
         page = 0;
         numberOfAvatars = CountNumberOfAvatars();
+        chosenAvatarIndex = -1;
+
         SetAvatars();
     }
 
     public void OnAvatarChosen(GameObject chosenAvatar)
     {
-        PlayerPrefs.SetInt("Avatar", Array.IndexOf(choosableAvatars, chosenAvatar) + page);
+        chosenAvatarIndex = Array.IndexOf(choosableAvatars, chosenAvatar) + page;
+        PlayerPrefs.SetInt("Avatar", chosenAvatarIndex);
         mirrorAvatar.UpdateAvatar();
         SetAvatars();
     }
@@ -51,11 +56,17 @@ public class ChangingRomManager : MonoBehaviour
 
             try
             {
-                GameObject avatar = Instantiate(Resources.Load<GameObject>("Avatars/Avatar_" + (i + page)), choosableAvatars[i].transform);
+                GameObject avatar;
+
+                if (i+page != chosenAvatarIndex)
+                    avatar = Instantiate(Resources.Load<GameObject>("Avatars/Avatar_" + (i + page)), choosableAvatars[i].transform);
+                else
+                    avatar = Instantiate(Resources.Load<GameObject>("Avatars/BaseAvatar"), choosableAvatars[i].transform);
+
                 avatar.transform.position = choosableAvatars[i].transform.position;
                 Quaternion avatarRotation = Quaternion.LookRotation(-avatar.transform.position);
                 avatar.transform.rotation = avatarRotation;
-                avatar.transform.localScale -= new Vector3(0.3f, 0.3f, 0.3f);
+                avatar.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
 
                 choosableAvatars[i].GetComponent<ChoosableAvatar>().Active = true;
             }

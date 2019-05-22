@@ -5,7 +5,7 @@ using UnityEngine;
 public class ChoosableAvatar : MonoBehaviour
 {
     private ChangingRomManager manager;
-    public bool Active { get; set; }
+    public bool Active { get; set; } //true if the avatar can be chosen, it is set to false when the avatar is chosed
 
     private void Start()
     {
@@ -32,13 +32,14 @@ public class ChoosableAvatar : MonoBehaviour
 
         yield return new WaitForSeconds(0.1f);
 
+        //destroy the avatar and substitute it with the base avatar
         Destroy(transform.GetChild(0).gameObject);
         GameObject newAvatar = Instantiate(Resources.Load<GameObject>("Avatars/BaseAvatar"), this.transform.position, this.transform.rotation);
         newAvatar.transform.rotation = Quaternion.LookRotation(-newAvatar.transform.position);
         newAvatar.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
         newAvatar.transform.parent = this.transform;
 
-        Active = false;
+        Active = false; //now the avatar cannot be chosen again
     }
 
 

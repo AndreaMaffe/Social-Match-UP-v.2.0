@@ -3275,15 +3275,20 @@ public static class PhotonNetwork
     /// </param>
     public static void LoadLevel(string levelName)
     {
-		networkingPeer.AsynchLevelLoadCall = false;
+        if (levelName != "NewGameMenu")
+        {
+            networkingPeer.AsynchLevelLoadCall = false;
 
-		if (PhotonNetwork.automaticallySyncScene) {
-			networkingPeer.SetLevelInPropsIfSynced (levelName,true);
-		}
+            if (PhotonNetwork.automaticallySyncScene)
+            {
+                networkingPeer.SetLevelInPropsIfSynced(levelName, true);
+            }
 
-        PhotonNetwork.isMessageQueueRunning = false;
-        networkingPeer.loadingLevelAndPausedNetwork = true;
-        SceneManager.LoadScene(levelName);
+            PhotonNetwork.isMessageQueueRunning = false;
+            networkingPeer.loadingLevelAndPausedNetwork = true;
+            SceneManager.LoadScene(levelName);
+        }
+
     }
 
 

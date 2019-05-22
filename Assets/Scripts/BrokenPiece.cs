@@ -10,7 +10,7 @@ public class BrokenPiece : MonoBehaviour {
 
     void Start()
     {
-        StartCoroutine(Wait());
+        StartCoroutine(Wait()); //short delay to make sure everything has been correctly generated
         effectiveObject = transform.Find("Object").gameObject;
         collider = transform.Find("Collider").gameObject;
     }

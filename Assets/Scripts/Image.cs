@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Image : MonoBehaviour {
 
@@ -16,6 +17,8 @@ public class Image : MonoBehaviour {
 
     private void Start()
     {
+        if (this.gameObject.GetPhotonView().isMine == false)
+            GetComponent<EventTrigger>().enabled = false;
         IsGazed = false;
         goldenParticle = transform.Find("GoldenParticles").gameObject;
         gameManagerView = GameObject.Find("ClassicGameManager(Clone)").GetPhotonView();
@@ -65,13 +68,13 @@ public class Image : MonoBehaviour {
 
     public void OnEnterGaze()
     {
-        animator.SetBool("Gazed", true);
-        gameManagerView.RPC("OnImageEnterGaze", gameManagerView.owner, index, PhotonNetwork.player.ID);
+            animator.SetBool("Gazed", true);
+            gameManagerView.RPC("OnImageEnterGaze", gameManagerView.owner, index, PhotonNetwork.player.ID);
     }
 
-    public void OnExitGaze()
+    public void OnExitGaze() 
     {
-        animator.SetBool("Gazed", false);
-        gameManagerView.RPC("OnImageExitGaze", gameManagerView.owner, index, PhotonNetwork.player.ID);
+            animator.SetBool("Gazed", false);
+            gameManagerView.RPC("OnImageExitGaze", gameManagerView.owner, index, PhotonNetwork.player.ID);
     }
 }

@@ -28,19 +28,48 @@ public class PhotonManager : Photon.MonoBehaviour
             Destroy(this);
     }
 
-
     void Start ()
     {
         DontDestroyOnLoad(this.gameObject);
-        PhotonNetwork.ConnectUsingSettings("1");
         order = 0;
         PhotonNetwork.automaticallySyncScene = true;
+        Connect();
     }
 
     public void OnConnectedToMaster()
     {
         Debug.Log("Connected to the server");
         PhotonNetwork.JoinLobby(new TypedLobby("MyLobby", LobbyType.SqlLobby));
+    }
+
+    private void Connect()
+    {
+        try
+        {
+            PhotonNetwork.ConnectUsingSettings("1");
+            Debug.Log("Trying to connnect...");
+        }
+        catch (System.Net.Sockets.SocketException e) { }
+    }
+
+    //Called if a connect call to the Photon server failed (before the connection was established), followed by a call to OnDisconnectedFromPhoton().
+    public void OnFailedToConnectToPhoton()
+    {
+        SceneManager.LoadScene("MainMenu");
+        Debug.Log("Connection failed!");
+    }
+
+    //Called when something causes the connection to fail (after it was established), followed by a call to OnDisconnectedFromPhoton().
+    public void OnConnectionFail()
+    {
+        SceneManager.LoadScene("MainMenu");
+        Debug.Log("Disconnected from server!");
+    }
+
+    public void OnDisconnectedFromPhoton()
+    {
+        Connect();
+        Debug.Log("Trying to connnect...");
     }
 
     public void CreateRoom(string roomName)

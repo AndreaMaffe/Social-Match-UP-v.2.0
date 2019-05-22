@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ClassicGameManager : Photon.MonoBehaviour
 {
@@ -14,31 +15,34 @@ public class ClassicGameManager : Photon.MonoBehaviour
     private void Start()
     {
         numberOfDestroyedImages = 0;
-        AudioManager.instance.PlayBackgroundMusic();
-        StartCoroutine("SetUpGame");        
+        AudioManager.instance.PlayBackgroundMusic();      
     }
 
-    //initial setup, called at task launch
-    IEnumerator SetUpGame()
+    private void Update()
     {
-        yield return new WaitForSeconds(8); //since the HeadsetPlayer may not have been already created by other players, it's better to wait
+        if (players == null || players.Length < 2)
+        {
+            players = GameObject.FindGameObjectsWithTag("MainCamera");
 
-        //find the players in the scene
-        players = GameObject.FindGameObjectsWithTag("MainCamera");
-        foreach (GameObject player in players)
-            if (player.GetPhotonView().isMine)
-                thisPlayer = player.gameObject;
+            if (players.Length == 2)
+            {
+                Debug.Log("Giocatori trovati");
 
-        Debug.Log(players.Length + " players");
+                foreach (GameObject player in players)
+                    if (player.GetPhotonView().isMine)
+                        thisPlayer = player.gameObject;
 
-        //only the main GameManager (not its PhotonViews) must spawn the images
-        if (this.gameObject.GetPhotonView().isMine)
-            SpawnRandomImages();
+                if (this.gameObject.GetPhotonView().isMine) //only the main GameManager must Spawn the Images
+                {
+                    SpawnRandomImages();
+                }
+            }
+        }
     }
 
-    //generate a number of images equal to variable NumberOfImages for both player in randomic position around them.
-    //The images are chosen randomly from the set of multiple sprites decided before launching the task.
-    private void SpawnRandomImages()
+        //generate a number of images equal to variable NumberOfImages for both player in randomic position around them.
+        //The images are chosen randomly from the set of multiple sprites decided before launching the task.
+        private void SpawnRandomImages()
     {
         images = new Dictionary<int, GameObject[]>();
         
@@ -62,7 +66,7 @@ public class ClassicGameManager : Photon.MonoBehaviour
 
             for (int i = 0; i < PhotonManager.instance.NumberOfImages; i++)
             {
-                Vector3 imagePosition = player.transform.position + Random.insideUnitSphere*2 + Random.onUnitSphere;
+                Vector3 imagePosition = player.transform.position + Random.onUnitSphere*2;
                 Quaternion imageRotation = Quaternion.LookRotation(player.transform.position - imagePosition);
                 GameObject image = PhotonNetwork.Instantiate("Image", imagePosition, imageRotation, 0);
                 image.GetPhotonView().RPC("SetSprite", PhotonTargets.All, PhotonManager.instance.ImageType, chosenImages[i]);
@@ -70,7 +74,11 @@ public class ClassicGameManager : Photon.MonoBehaviour
 
                 if (player.GetPhotonView().isMine)
                     image.GetPhotonView().RPC("ChangeCircleColor", PhotonTargets.All, 0f, 0f, 255f);
-                else image.GetPhotonView().RPC("ChangeCircleColor", PhotonTargets.All, 255f, 0f, 0f);
+                else
+                {
+                    image.GetPhotonView().RPC("ChangeCircleColor", PhotonTargets.All, 255f, 0f, 0f);
+                    image.GetPhotonView().TransferOwnership(player.GetPhotonView().owner);
+                }
 
                 images[player.GetPhotonView().ownerId][i] = image;
             }
@@ -145,7 +153,9 @@ public class ClassicGameManager : Photon.MonoBehaviour
         AudioManager.instance.PlayVictorySound();
 
         SpriteRenderer endGamePanel = thisPlayer.transform.Find("BlackPanel").GetComponent<SpriteRenderer>();
-        endGamePanel.color = Color.black;        
+        endGamePanel.color = Color.black;
+        yield return new WaitForSeconds(4);
+        SceneManager.LoadScene("MainMenu");
     }
 
 

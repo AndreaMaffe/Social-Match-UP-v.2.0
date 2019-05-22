@@ -879,8 +879,9 @@ GameObject:
   - component: {fileID: 81697716357119596}
   - component: {fileID: 114949035388946004}
   - component: {fileID: 114696342069618328}
-  - component: {fileID: 114119067946814428}
   - component: {fileID: 114749054619339554}
+  - component: {fileID: 114010654048836880}
+  - component: {fileID: 114700566504932454}
   m_Layer: 0
   m_Name: Helper
   m_TagString: Player
@@ -7059,7 +7060,7 @@ MonoBehaviour:
   reticleSegments: 20
   reticleGrowthSpeed: 8
   reticleSortingOrder: 32767
---- !u!114 &114119067946814428
+--- !u!114 &114010654048836880
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7067,7 +7068,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1430148145323246}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a15299dd87449c14295cf36f465dc398, type: 3}
+  m_Script: {fileID: 11500000, guid: cc77bcf0108469f419a6b0e85b83283b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114696342069618328
@@ -7147,6 +7148,17 @@ MonoBehaviour:
     InterpolateOption: 0
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 0
+--- !u!114 &114700566504932454
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1430148145323246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 660df5a5b56391b4898116297b81df59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114749054619339554
 MonoBehaviour:
   m_ObjectHideFlags: 1

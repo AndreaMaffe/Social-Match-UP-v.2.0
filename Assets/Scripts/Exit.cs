@@ -19,9 +19,6 @@ public class Exit : MonoBehaviour
     IEnumerator BackToMainMenu()
     {
         yield return new WaitForSeconds(3);
-        //XRSettings.LoadDeviceByName("None");
-        //yield return null;
-        //XRSettings.enabled = false;
         SceneManager.LoadScene("MainMenu");
     }
 

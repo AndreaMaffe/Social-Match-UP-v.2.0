@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class MirrorAvatar : MonoBehaviour
 {
-    public GameObject camera; //main camera to follow
+    public GameObject playerCamera; //main camera to follow
 	
 	void Update ()
     {
-        this.transform.rotation = Quaternion.Euler(-camera.transform.rotation.eulerAngles.x, - camera.transform.rotation.eulerAngles.y, 0);
+        this.transform.rotation = Quaternion.Euler(-playerCamera.transform.rotation.eulerAngles.x, -playerCamera.transform.rotation.eulerAngles.y, 0);
 	}
 
+    //destroy the current avatar and substitute it with the one chosen by the player
     public void UpdateAvatar()
     {
         Destroy(transform.GetChild(0).gameObject);

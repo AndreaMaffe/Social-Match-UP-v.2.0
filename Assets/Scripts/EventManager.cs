@@ -15,7 +15,7 @@ public class EventManager : MonoBehaviour
 
     public void OnOpenGamesButtonClicked()
     {
-        SceneManager.LoadScene("OpenGames");
+        SceneManager.LoadScene("JoinGameMenu");
     }
 
     public void OnNewgameButtonClicked()

@@ -68,4 +68,5 @@ MonoBehaviour:
   - SetNumberOfObjects
   - UpdateScore
   - LoadChosenAvatar
+  - LoadAvatar
   DisableAutoOpenWizard: 1

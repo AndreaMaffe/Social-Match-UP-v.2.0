@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FixingGameManager : Photon.MonoBehaviour
 {
@@ -55,7 +56,10 @@ public class FixingGameManager : Photon.MonoBehaviour
         AudioManager.instance.PlayVictorySound();
 
         SpriteRenderer endGamePanel = thisPlayer.transform.Find("BlackPanel").GetComponent<SpriteRenderer>();
-        endGamePanel.color = Color.black;        
+        endGamePanel.color = Color.black;
+
+        yield return new WaitForSeconds(4);
+        SceneManager.LoadScene("MainMenu");
     }
 
     [PunRPC]
