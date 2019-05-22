@@ -8,7 +8,9 @@ public class DraggableObject : MonoBehaviour
     private Transform camTransform;
     private Rigidbody rb;
     private bool dragging;
+    private bool droppable;
     private Vector3 lastFramePosition;
+    private Vector3 lastAnchorPointPosition;
     private int index;
     private PhotonView gameManagerView;
 
@@ -20,6 +22,8 @@ public class DraggableObject : MonoBehaviour
     {
         camTransform = Camera.main.transform;
         rb = GetComponent<Rigidbody>();
+        droppable = true;
+        lastAnchorPointPosition = Vector3.zero;
 
         //disable the script and the event trigger if the object is not mine (in this way the other player cannot drag it)
         if (GetComponent<PhotonView>().isMine == false)
@@ -56,6 +60,9 @@ public class DraggableObject : MonoBehaviour
             }
             catch (System.NullReferenceException e) { Debug.Log("Manager not found!"); }
 
+        if (Vector3.Distance(this.transform.position, lastAnchorPointPosition) > 1.3f)
+            droppable = true;
+            
     }
 
     public void OnGazeEnter()
@@ -93,15 +100,16 @@ public class DraggableObject : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "AnchorPoint" && gameObject.GetPhotonView().isMine && other.GetComponent<AnchorPoint>().anchoredObject == null)
+        if (other.tag == "AnchorPoint" && gameObject.GetPhotonView().isMine && other.GetComponent<AnchorPoint>().anchoredObject == null && droppable)
         {
             dragging = false;
             light.SetActive(false);
             AudioManager.instance.PlayDingSound();
             other.GetComponent<AnchorPoint>().anchoredObject = this.gameObject;
             this.anchorPoint = other.gameObject;
+            this.lastAnchorPointPosition = other.transform.position;
             gameManagerView.RPC("OnObjectPositioned", PhotonTargets.All, PhotonNetwork.player.ID, this.index, other.gameObject.GetComponent<AnchorPoint>().Index);
-            
+            droppable = false;
         }
     }
 

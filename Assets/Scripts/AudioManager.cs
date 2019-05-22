@@ -23,10 +23,7 @@ public class AudioManager : MonoBehaviour
             Destroy(this.gameObject);
 
         DontDestroyOnLoad(this);
-    }
 
-    private void Start()
-    {
         audioSource = GetComponent<AudioSource>();
 
         backgroundMusic = Resources.Load<AudioClip>("Sounds/Soundtrack");
@@ -43,14 +40,18 @@ public class AudioManager : MonoBehaviour
 
     public void PlayBackgroundMusic()
     {
+
         audioSource.clip = backgroundMusic;
         audioSource.Play();
     }
 
     public void PlayMainMenuMusic()
     {
-        audioSource.clip = mainMenuMusic;
-        audioSource.Play();
+        if (audioSource.clip != mainMenuMusic)
+        {
+            audioSource.clip = mainMenuMusic;
+            audioSource.Play();
+        }
     }
 
     public void StopBackgroundMusic()

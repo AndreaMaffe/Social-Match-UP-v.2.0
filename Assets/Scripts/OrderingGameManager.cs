@@ -62,7 +62,7 @@ public class OrderingGameManager : MonoBehaviour
     {
         for (int i = 0; i < numberOfObjects; i++)
         {
-            GameObject draggableObject = PhotonNetwork.Instantiate("Balloon", thisPlayer.transform.position + Random.onUnitSphere*3, Quaternion.identity, 0);
+            GameObject draggableObject = PhotonNetwork.Instantiate("Balloon", thisPlayer.transform.position + Random.onUnitSphere*2, Quaternion.identity, 0);
             draggableObject.GetPhotonView().RPC("SetIndex", PhotonTargets.All, i);
         }
     }
