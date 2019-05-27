@@ -37,6 +37,7 @@ public class DraggableObject : MonoBehaviour
     {
         if (dragging)
         {
+            Debug.Log(Vector3.Distance(this.transform.position, lastAnchorPointPosition));
             //follow the camera movements
             transform.position = camTransform.position + camTransform.forward * (3+ Mathf.Abs(transform.position.x/2f));
 
@@ -60,7 +61,7 @@ public class DraggableObject : MonoBehaviour
             }
             catch (System.NullReferenceException e) { Debug.Log("Manager not found!"); }
 
-        if (Vector3.Distance(this.transform.position, lastAnchorPointPosition) > 1.3f)
+        if (Vector3.Distance(this.transform.position, lastAnchorPointPosition) > 1)
             droppable = true;
             
     }
@@ -108,8 +109,8 @@ public class DraggableObject : MonoBehaviour
             other.GetComponent<AnchorPoint>().anchoredObject = this.gameObject;
             this.anchorPoint = other.gameObject;
             this.lastAnchorPointPosition = other.transform.position;
-            gameManagerView.RPC("OnObjectPositioned", PhotonTargets.All, PhotonNetwork.player.ID, this.index, other.gameObject.GetComponent<AnchorPoint>().Index);
             droppable = false;
+            gameManagerView.RPC("OnObjectPositioned", PhotonTargets.All, PhotonNetwork.player.ID, this.index, other.gameObject.GetComponent<AnchorPoint>().Index);
         }
     }
 
