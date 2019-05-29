@@ -62,9 +62,12 @@ public class OrderingGameManager : MonoBehaviour
     {
         for (int i = 0; i < numberOfObjects; i++)
         {
-            GameObject draggableObject = PhotonNetwork.Instantiate("Balloon", thisPlayer.transform.position + Random.onUnitSphere*1.5f, Quaternion.identity, 0);
+            Vector3 objectPosition = new Vector3(Random.Range(-numberOfObjects / 2f, numberOfObjects / 2f), 1, thisPlayer.transform.position.z / 1.7f);
+            GameObject draggableObject = PhotonNetwork.Instantiate("Balloon", objectPosition, Quaternion.identity, 0);
             draggableObject.GetPhotonView().RPC("SetIndex", PhotonTargets.All, i);
         }
+
+        Instantiate(Resources.Load<GameObject>("WaitingAnimation"), Vector3.zero, Quaternion.identity);
     }
 
     void SpawnAnchorPoints()
