@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class FixingGameManager : Photon.MonoBehaviour
+public class FixingGameManager : GameManager
 {
-    private GameObject[] players;
-    private GameObject thisPlayer;
-
     [SerializeField]
     private string pieceGazed;
     [SerializeField]
@@ -21,45 +18,15 @@ public class FixingGameManager : Photon.MonoBehaviour
     private void Start()
     {
         AudioManager.instance.PlayBackgroundMusic();
-        StartCoroutine("SetUpGame");
         numberOfFixedPieces = 0;
         pieces = GameObject.Find("Pieces").transform;
         brokenPieces = GameObject.Find("BrokenPieces").transform;
-    }
-
-    //initial setup, called at task launch
-    IEnumerator SetUpGame()
-    {
-        yield return new WaitForSeconds(10); //wait a bit to give to each client the time to instantiate their player (otherwise only one player is found)
-
-        //find the players in the scene
-        players = GameObject.FindGameObjectsWithTag("MainCamera");
-
-        foreach (GameObject player in players)
-            if (player.GetPhotonView().isMine)
-                thisPlayer = player.gameObject;
     }
 
     [PunRPC]
     public void StartVictoryAnimations()
     {
         StartCoroutine(OnVictory());
-    }
-
-    IEnumerator OnVictory()
-    {
-        yield return new WaitForSeconds(1);
-        AudioManager.instance.PlayHurraySound();
-        yield return new WaitForSeconds(3);
-        AudioManager.instance.StopBackgroundMusic();
-        yield return new WaitForSeconds(2);
-        AudioManager.instance.PlayVictorySound();
-
-        SpriteRenderer endGamePanel = thisPlayer.transform.Find("BlackPanel").GetComponent<SpriteRenderer>();
-        endGamePanel.color = Color.black;
-
-        yield return new WaitForSeconds(4);
-        SceneManager.LoadScene("MainMenu");
     }
 
     [PunRPC]
@@ -109,6 +76,7 @@ public class FixingGameManager : Photon.MonoBehaviour
             this.gameObject.GetPhotonView().RPC("StartVictoryAnimations", PhotonTargets.All); //spostare sul player
     }
 
-
-
+    protected override void SetUpGame()
+    {
+    }
 }

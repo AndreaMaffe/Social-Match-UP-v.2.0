@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class JoinRoomButton : MonoBehaviour {
-
+public class JoinRoomButton : MonoBehaviour
+{
     private Text text;
 
 	void Start ()

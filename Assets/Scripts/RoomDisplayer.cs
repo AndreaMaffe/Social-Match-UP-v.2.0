@@ -36,7 +36,7 @@ public class RoomDisplayer : MonoBehaviour
             GameObject joinRoomButton = Instantiate(Resources.Load<GameObject>("JoinRoomButton"), GameObject.Find("Canvas").transform);
             joinRoomButton.GetComponent<RectTransform>().localPosition = new Vector3(0, i, 0);
             joinRoomButton.transform.Find("Text").GetComponent<Text>().text = roomInfo.Name;
-            i -= 70;
+            i -= 80;
         }
     }
 }

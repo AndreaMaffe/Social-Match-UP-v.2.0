@@ -4,8 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LetsGoButton : MonoBehaviour {
-
+public class LetsGoButton : MonoBehaviour
+{
     private string playerName, task, location, imagesType, numberOfImages;
     private byte numberOfPlayers;
 

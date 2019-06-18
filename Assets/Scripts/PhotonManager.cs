@@ -42,6 +42,14 @@ public class PhotonManager : Photon.MonoBehaviour
         PhotonNetwork.JoinLobby(new TypedLobby("MyLobby", LobbyType.SqlLobby));
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+    }
+
     private void Connect()
     {
         try

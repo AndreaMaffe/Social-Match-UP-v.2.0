@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ClassicGameManager : Photon.MonoBehaviour
+public class ClassicGameManager : GameManager
 {
-    private GameObject[] players;
-    private GameObject thisPlayer;
 
     private Dictionary<int, GameObject[]> images;     //Dictionary that pairs each playerId with the array of images of that player
     private int numberOfDestroyedImages;              //  e.g:        <ID Player1> | [img0, img1, img2, img3]
@@ -16,28 +14,6 @@ public class ClassicGameManager : Photon.MonoBehaviour
     {
         numberOfDestroyedImages = 0;
         AudioManager.instance.PlayBackgroundMusic();      
-    }
-
-    private void Update()
-    {
-        if (players == null || players.Length < 2)
-        {
-            players = GameObject.FindGameObjectsWithTag("MainCamera");
-
-            if (players.Length == 2)
-            {
-                Debug.Log("Giocatori trovati");
-
-                foreach (GameObject player in players)
-                    if (player.GetPhotonView().isMine)
-                        thisPlayer = player.gameObject;
-
-                if (this.gameObject.GetPhotonView().isMine) //only the main GameManager must Spawn the Images
-                {
-                    SpawnRandomImages();
-                }
-            }
-        }
     }
 
         //generate a number of images equal to variable NumberOfImages for both player in randomic position around them.
@@ -158,6 +134,11 @@ public class ClassicGameManager : Photon.MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
-
-
+    protected override void SetUpGame()
+    {
+        if (this.gameObject.GetPhotonView().isMine) //only the main GameManager must Spawn the Images
+        {
+            SpawnRandomImages();
+        }
+    }
 }

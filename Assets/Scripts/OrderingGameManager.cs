@@ -4,10 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class OrderingGameManager : MonoBehaviour
+public class OrderingGameManager : GameManager
 {
-    private GameObject[] players;
-    private GameObject thisPlayer;
     private int numberOfObjects;
     private int[] combinationPlayer1;
     private int[] combinationPlayer2;
@@ -17,45 +15,11 @@ public class OrderingGameManager : MonoBehaviour
     {
         AudioManager.instance.PlayBackgroundMusic();
 
-        //synchronize the value of numberOfObjects between all clients (otherwise only the player who creates the room has it)
+        //synchronize the value of numberOfObjects between all clients (otherwise only the player who creates the room will have it)
         if (gameObject.GetPhotonView().isMine)
             gameObject.GetPhotonView().RPC("SetNumberOfObjects", PhotonTargets.All, PhotonManager.instance.NumberOfImages);
 
         scores = GameObject.FindGameObjectsWithTag("Score");
-    }
-
-    private void Update()
-    {
-        if ( (players==null || players.Length <2) && numberOfObjects != 0)
-        {
-            players = GameObject.FindGameObjectsWithTag("MainCamera");
-
-            if (players.Length==2)
-            {
-                Debug.Log("Giocatori trovati");
-
-                foreach (GameObject player in players)
-                    if (player.GetPhotonView().isMine)
-                        thisPlayer = player.gameObject;
-
-                SpawnObjects();
-
-                if (this.gameObject.GetPhotonView().isMine)
-                {
-                    combinationPlayer1 = new int[numberOfObjects];
-                    combinationPlayer2 = new int[numberOfObjects];
-
-                    this.gameObject.GetPhotonView().RPC("UpdateScore", PhotonTargets.All, "0/" + numberOfObjects);
-                    SpawnAnchorPoints();
-                }
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log("PLAYER 1 : " + combinationPlayer1[0] + ", " + combinationPlayer1[1] + ", " + combinationPlayer1[2]);
-            Debug.Log("PLAYER 2 : " + combinationPlayer2[0] + ", " + combinationPlayer2[1] + ", " + combinationPlayer2[2]);
-        }
     }
 
     void SpawnObjects()
@@ -142,20 +106,17 @@ public class OrderingGameManager : MonoBehaviour
         StartCoroutine(OnVictory());
     }
 
-    IEnumerator OnVictory()
+    protected override void SetUpGame()
     {
-        yield return new WaitForSeconds(1);
-        AudioManager.instance.PlayHurraySound();
-        yield return new WaitForSeconds(3);
-        AudioManager.instance.StopBackgroundMusic();
-        yield return new WaitForSeconds(2);
-        AudioManager.instance.PlayVictorySound();
+        SpawnObjects();
 
-        SpriteRenderer endGamePanel = thisPlayer.transform.Find("BlackPanel").GetComponent<SpriteRenderer>();
-        endGamePanel.color = Color.black;
+        if (this.gameObject.GetPhotonView().isMine)
+        {
+            combinationPlayer1 = new int[numberOfObjects];
+            combinationPlayer2 = new int[numberOfObjects];
 
-        yield return new WaitForSeconds(4);
-        SceneManager.LoadScene("MainMenu");
+            this.gameObject.GetPhotonView().RPC("UpdateScore", PhotonTargets.All, "0/" + numberOfObjects);
+            SpawnAnchorPoints();
+        }
     }
-
 }
