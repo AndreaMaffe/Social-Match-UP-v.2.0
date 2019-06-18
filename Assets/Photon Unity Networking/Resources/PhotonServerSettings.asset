@@ -11,9 +11,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f3758f8f58fdef43803eb9be1df0608, type: 3}
   m_Name: PhotonServerSettings
   m_EditorClassIdentifier: 
-  AppID: fd3c1f69-0b8d-4496-853d-9751aed2bee1
-  VoiceAppID: fd3c1f69-0b8d-4496-853d-9751aed2bee1
-  ChatAppID: fd3c1f69-0b8d-4496-853d-9751aed2bee1
+  AppID: 95381fbb-ce3f-4c16-aced-e90b2d95ea2f
+  VoiceAppID: 95381fbb-ce3f-4c16-aced-e90b2d95ea2f
+  ChatAppID: 95381fbb-ce3f-4c16-aced-e90b2d95ea2f
   HostType: 1
   PreferredRegion: 0
   EnabledRegions: -1
@@ -25,7 +25,7 @@ MonoBehaviour:
   EnableLobbyStatistics: 1
   PunLogging: 0
   NetworkLogging: 1
-  RunInBackground: 1
+  RunInBackground: 0
   RpcList:
   - Chat
   - DestroyRpc

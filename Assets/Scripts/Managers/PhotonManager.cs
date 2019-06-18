@@ -36,11 +36,13 @@ public class PhotonManager : Photon.MonoBehaviour
         Connect();
     }
 
+    /*
     public void OnConnectedToMaster()
     {
         Debug.Log("Connected to the server");
         PhotonNetwork.JoinLobby(new TypedLobby("MyLobby", LobbyType.SqlLobby));
     }
+    */
 
     void Update()
     {
@@ -57,7 +59,7 @@ public class PhotonManager : Photon.MonoBehaviour
             PhotonNetwork.ConnectUsingSettings("1");
             Debug.Log("Trying to connnect...");
         }
-        catch (System.Net.Sockets.SocketException e) { }
+        catch (System.Net.Sockets.SocketException e) { Debug.LogError("Connection failed!");  }
     }
 
     //Called if a connect call to the Photon server failed (before the connection was established), followed by a call to OnDisconnectedFromPhoton().

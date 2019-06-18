@@ -18,8 +18,6 @@ public class MainMenuAvatar2 : MonoBehaviour
         this.transform.position = new Vector3(transform.position.x, randomYPosition, 85);
         direction = 1;
         angle = 0;
-
-        Debug.Log(Screen.width + " " + Screen.height);
     }
 
     private void Update()
