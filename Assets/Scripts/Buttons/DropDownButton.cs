@@ -16,7 +16,6 @@ public class DropDownButton : MonoBehaviour {
         parentPanel = transform.parent.gameObject;
         thisText = transform.Find("Text").GetComponent<TextMeshProUGUI>();
         tick = transform.Find("Tick").gameObject;
-
     }
 
     public void OnClick()

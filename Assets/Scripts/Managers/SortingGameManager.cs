@@ -4,22 +4,28 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class OrderingGameManager : GameManager
+public class SortingGameManager : GameManager
 {
     private int numberOfObjects;
     private int[] combinationPlayer1;
     private int[] combinationPlayer2;
     private GameObject[] scores;
 
+    public bool IsPlayerDragging { get; set; } //true if the player is dragging an object, false otherwise
+
     private void Start()
     {
         AudioManager.instance.PlayBackgroundMusic();
 
         //synchronize the value of numberOfObjects between all clients (otherwise only the player who creates the room will have it)
+        /*
         if (gameObject.GetPhotonView().isMine)
             gameObject.GetPhotonView().RPC("SetNumberOfObjects", PhotonTargets.All, PhotonManager.instance.NumberOfImages);
+        */
 
+        numberOfObjects = PhotonManager.instance.NumberOfImages;
         scores = GameObject.FindGameObjectsWithTag("Score");
+        IsPlayerDragging = false;
     }
 
     void SpawnObjects()
@@ -94,17 +100,13 @@ public class OrderingGameManager : GameManager
             this.gameObject.GetPhotonView().RPC("StartVictoryAnimations", PhotonTargets.All);
     }
 
+    /*
     [PunRPC]
     void SetNumberOfObjects(int number)
     {
         numberOfObjects = number;
     }
-
-    [PunRPC]
-    public void StartVictoryAnimations()
-    {
-        StartCoroutine(OnVictory());
-    }
+    */
 
     protected override void SetUpGame()
     {

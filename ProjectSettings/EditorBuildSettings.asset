@@ -5,10 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/PUNVoice/DemoVoice/DemoVoice-Scene.unity
     guid: 833e8409304dace449e9c5cf686420d7
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Voice example.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1

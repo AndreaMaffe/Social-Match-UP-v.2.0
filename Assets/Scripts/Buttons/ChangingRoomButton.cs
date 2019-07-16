@@ -8,7 +8,6 @@ public class ChangingRoomButton : MonoBehaviour
     public Animator animator;
     private ChangingRomManager manager;
 
-
     private void Start()
     {
         manager = GameObject.Find("ChangingRoomManager").GetComponent<ChangingRomManager>();

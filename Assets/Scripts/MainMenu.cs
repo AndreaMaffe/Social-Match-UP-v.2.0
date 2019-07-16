@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR;
 
+//General script for MainMenu functionalities
 public class MainMenu : MonoBehaviour
 {
     private Button newGameButton;
@@ -11,6 +12,10 @@ public class MainMenu : MonoBehaviour
 
     private void Start()
     {
+        //creates a PhotonManager
+        if (PhotonManager.instance == null)
+            Instantiate(Resources.Load<GameObject>("Managers/PhotonManager"));           
+
         AudioManager.instance.PlayMainMenuMusic();
         StartCoroutine("SwitchVROff");
 
@@ -18,6 +23,7 @@ public class MainMenu : MonoBehaviour
         joinGameButton = GameObject.Find("JoinGameButton").GetComponent<Button>();
     }
 
+    //Switch the game back to 2D mode
     private IEnumerator SwitchVROff()
     {
         XRSettings.LoadDeviceByName("None");
@@ -25,6 +31,7 @@ public class MainMenu : MonoBehaviour
         XRSettings.enabled = false;
     }
 
+    //disable the NewGame / JoinGame buttons wether the connection is not available
     private void Update()
     {
         if (PhotonNetwork.connected)

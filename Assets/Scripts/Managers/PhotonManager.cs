@@ -16,7 +16,7 @@ public class PhotonManager : Photon.MonoBehaviour
     public string ImageType;
     public int NumberOfImages;
     public byte NumberOfPlayers;
-
+    public bool AudioChat;
 
     private int order;
 
@@ -25,30 +25,32 @@ public class PhotonManager : Photon.MonoBehaviour
         if (instance == null)
             instance = this;
         else if (instance != this)
-            Destroy(this);
+            Destroy(this.gameObject);
     }
 
     void Start ()
     {
         DontDestroyOnLoad(this.gameObject);
-        order = 0;
         PhotonNetwork.automaticallySyncScene = true;
         Connect();
     }
 
-    /*
+    
     public void OnConnectedToMaster()
     {
         Debug.Log("Connected to the server");
         PhotonNetwork.JoinLobby(new TypedLobby("MyLobby", LobbyType.SqlLobby));
     }
-    */
+    
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Application.Quit();
+            SceneManager.LoadScene("MainMenu");
+
+            if (PhotonNetwork.inRoom)
+                PhotonNetwork.LeaveRoom();
         }
     }
 
@@ -65,14 +67,16 @@ public class PhotonManager : Photon.MonoBehaviour
     //Called if a connect call to the Photon server failed (before the connection was established), followed by a call to OnDisconnectedFromPhoton().
     public void OnFailedToConnectToPhoton()
     {
-        SceneManager.LoadScene("MainMenu");
+        if (SceneManager.GetActiveScene().name != "MainMenu")
+            SceneManager.LoadScene("MainMenu");
         Debug.Log("Connection failed!");
     }
 
     //Called when something causes the connection to fail (after it was established), followed by a call to OnDisconnectedFromPhoton().
     public void OnConnectionFail()
     {
-        SceneManager.LoadScene("MainMenu");
+        if (SceneManager.GetActiveScene().name != "MainMenu")
+            SceneManager.LoadScene("MainMenu");
         Debug.Log("Disconnected from server!");
     }
 
@@ -100,6 +104,8 @@ public class PhotonManager : Photon.MonoBehaviour
     public void OnJoinedRoom()
     {
         order = PhotonNetwork.room.PlayerCount;
+        this.gameObject.AddComponent<PhotonView>();
+        gameObject.GetPhotonView().viewID = PhotonNetwork.room.GetHashCode();
         OnPhotonPlayerConnected(PhotonNetwork.player);
     }
 
@@ -121,6 +127,7 @@ public class PhotonManager : Photon.MonoBehaviour
             switch(order)
             {
                 case 1: PhotonNetwork.SetMasterClient(PhotonNetwork.player);
+                        gameObject.GetPhotonView().RPC("SetGameParameters", PhotonTargets.Others, Task, Location, NumberOfImages, AudioChat);
                         PhotonNetwork.LoadLevel(Task + "Gameplay" + Location);
                         StartCoroutine(StartGameAndInstantiateGameManager());
                         break;
@@ -137,19 +144,58 @@ public class PhotonManager : Photon.MonoBehaviour
     IEnumerator StartGameAsPlayer()
     {
         yield return new WaitForSeconds(5f);
-        PhotonNetwork.Instantiate("HeadsetPlayer", new Vector3(0, 3, -4), Quaternion.identity, 0);
+        GameObject player = PhotonNetwork.Instantiate("HeadsetPlayer", new Vector3(0, 3, -4), Quaternion.identity, 0);
+
+        if (AudioChat)
+        {
+            player.GetComponent<PhotonVoiceRecorder>().enabled = true;
+            PhotonVoiceSettings.Instance.VoiceDetection = true;
+        }
+
+        else
+        {
+            player.GetComponent<PhotonVoiceRecorder>().enabled = false;
+            PhotonVoiceSettings.Instance.VoiceDetection = false;
+        }
     }
 
     IEnumerator StartGameAsHelper()
     {
         yield return new WaitForSeconds(5f);
-        PhotonNetwork.Instantiate("Helper", new Vector3(-4, 3, 0), new Quaternion(0, 0.707f, 0, 0.707f), 0);
+
+        GameObject helper = PhotonNetwork.Instantiate("Helper", new Vector3(-4, 3, 0), new Quaternion(0, 0.707f, 0, 0.707f), 0);
+
+        if (AudioChat)
+        {
+            helper.GetComponent<PhotonVoiceRecorder>().enabled = true;
+            PhotonVoiceSettings.Instance.VoiceDetection = true;
+        }
+
+        else
+        {
+            helper.GetComponent<PhotonVoiceRecorder>().enabled = false;
+            PhotonVoiceSettings.Instance.VoiceDetection = false;
+        }
+
     }
 
     IEnumerator StartGameAndInstantiateGameManager() //crea un GameManager al primo giocatore e una sua View in tutti i mondi
     {
         yield return new WaitForSeconds(5f);
-        PhotonNetwork.Instantiate("HeadsetPlayer", new Vector3(0, 3, 4), new Quaternion(0,1,0,0), 0);
+        GameObject player = PhotonNetwork.Instantiate("HeadsetPlayer", new Vector3(0, 3, 4), new Quaternion(0, 1, 0, 0), 0);
+
+        if (AudioChat)
+        {
+            player.GetComponent<PhotonVoiceRecorder>().enabled = true;
+            PhotonVoiceSettings.Instance.VoiceDetection = true;
+        }
+
+        else
+        {
+            player.GetComponent<PhotonVoiceRecorder>().enabled = false;
+            PhotonVoiceSettings.Instance.VoiceDetection = false;
+        }
+
         PhotonNetwork.Instantiate("Managers/" + Task + "GameManager", Vector3.zero, Quaternion.identity, 0);
     }
 
@@ -158,6 +204,15 @@ public class PhotonManager : Photon.MonoBehaviour
         XRSettings.LoadDeviceByName("cardboard");
         yield return null;
         XRSettings.enabled = true;
+    }
+
+    [PunRPC]
+    public void SetGameParameters(string task, string location, int numberOfElements, bool audioChat)
+    {
+        this.Task = task;
+        this.Location = location;
+        this.NumberOfImages = numberOfElements;
+        this.AudioChat = audioChat;
     }
 
 }

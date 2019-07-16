@@ -34,13 +34,12 @@ public class AudioManager : MonoBehaviour
         victory = Resources.Load<AudioClip>("Sounds/Victory");
         pop = Resources.Load<AudioClip>("Sounds/Pop");
 
-        audioSource.volume = 0.4f;
+        audioSource.volume = 0.2f;
         audioSource.loop = true;
     }
 
     public void PlayBackgroundMusic()
     {
-
         audioSource.clip = backgroundMusic;
         audioSource.Play();
     }

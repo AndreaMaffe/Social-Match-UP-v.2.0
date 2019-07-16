@@ -8,6 +8,7 @@ public class LetsGoButton : MonoBehaviour
 {
     private string playerName, task, location, imagesType, numberOfImages;
     private byte numberOfPlayers;
+    private bool audioChat;
 
     public void StartGame()
     {
@@ -18,7 +19,7 @@ public class LetsGoButton : MonoBehaviour
         task = GameObject.Find("TaskButton").transform.Find("Label").GetComponent<TextMeshProUGUI>().text;
         location = GameObject.Find("LocationButton").transform.Find("Label").GetComponent<TextMeshProUGUI>().text;
 
-        if (task == "Classic" || task == "Ordering")
+        if (task == "Classic" || task == "Sorting")
             numberOfImages = GameObject.Find("NumberOfImagesButton").transform.Find("Label").GetComponent<TextMeshProUGUI>().text;
 
         if (task == "Classic")
@@ -28,9 +29,11 @@ public class LetsGoButton : MonoBehaviour
             numberOfPlayers = 3;
         else numberOfPlayers = 2;
 
+        audioChat = GameObject.Find("AudioChatToggle").GetComponent<Toggle>().isOn;
+
         PhotonManager.instance.NumberOfPlayers = numberOfPlayers;
 
-        if (task == "Classic" || task == "Ordering")
+        if (task == "Classic" || task == "Sorting")
             PhotonManager.instance.NumberOfImages = System.Convert.ToInt32(numberOfImages);
 
         if (task == "Classic")
@@ -38,6 +41,7 @@ public class LetsGoButton : MonoBehaviour
      
         PhotonManager.instance.Location = location;
         PhotonManager.instance.Task = task;
+        PhotonManager.instance.AudioChat = audioChat;
 
         PhotonManager.instance.CreateRoom(playerName + " (" + task + " - " + location + " - " + imagesType + ")");
     }

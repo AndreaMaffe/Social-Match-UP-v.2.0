@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//class for the avatar in the mirror in the ChangingRoom. Replicates the movements of the camera  with a mirror-like symmetry
 public class MirrorAvatar : MonoBehaviour
 {
     public GameObject playerCamera; //main camera to follow

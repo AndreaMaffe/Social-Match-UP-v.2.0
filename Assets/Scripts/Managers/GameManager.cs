@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+//Parent class of all different GameManagers. Provides the basic methods to setup the game correctly when both players are
+//ready and correctly instantiated over the network, and to close the game correctly when the match is over.
 public abstract class GameManager : MonoBehaviour
 {
     protected GameObject[] players;
@@ -27,7 +29,13 @@ public abstract class GameManager : MonoBehaviour
         }
     }
 
-    protected abstract void SetUpGame();
+    protected abstract void SetUpGame(); 
+
+    [PunRPC]
+    public void StartVictoryAnimations()
+    {
+        StartCoroutine(OnVictory());
+    }
 
     protected IEnumerator OnVictory()
     {

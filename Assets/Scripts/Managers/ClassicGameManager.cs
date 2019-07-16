@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class ClassicGameManager : GameManager
 {
-
     private Dictionary<int, GameObject[]> images;     //Dictionary that pairs each playerId with the array of images of that player
     private int numberOfDestroyedImages;              //  e.g:        <ID Player1> | [img0, img1, img2, img3]
                                                       //              <ID Player2> | [img0, img1, img2, img3]
@@ -68,11 +67,13 @@ public class ClassicGameManager : GameManager
     {
         images[playerId][imageIndex].GetComponent<Image>().IsGazed = true;
 
+        //checks if both players are looking at the same image
         bool sameImageGazed = true;
         foreach (int player in images.Keys)
             if (images[player][imageIndex].GetComponent<Image>().IsGazed == false)
                 sameImageGazed = false;
 
+        //if so, start the coroutine to destroy them
         if (sameImageGazed)
             StartCoroutine("DestroyImage", imageIndex);
     }
@@ -87,19 +88,19 @@ public class ClassicGameManager : GameManager
             images[playerId][imageIndex].GetComponent<Image>().IsGazed = false;
         } catch (System.NullReferenceException e) { }
 
-        StopAllCoroutines();
+        StopAllCoroutines(); //stops the coroutine eventually launched in OnImageEnterGaze
 
         foreach (int player in images.Keys)
             images[player][imageIndex].GetPhotonView().RPC("StopDestroyAnimation", PhotonTargets.All);
     }
 
-    //start the image animation, wait 5 secs and destroy the image. It is stopped by OnImageExitgaze
+    //start the image animation, wait 3 secs and destroy the image. It is stopped by OnImageExitgaze
     IEnumerator DestroyImage(int imageIndex)
     {
         foreach (int player in images.Keys)
             images[player][imageIndex].GetPhotonView().RPC("StartDestroyAnimation", PhotonTargets.All);
 
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(3);
 
         foreach (int player in images.Keys)
             images[player][imageIndex].GetPhotonView().RPC("AutoDestroy", PhotonTargets.All);
@@ -108,30 +109,6 @@ public class ClassicGameManager : GameManager
 
         if (numberOfDestroyedImages == PhotonManager.instance.NumberOfImages) 
             this.gameObject.GetPhotonView().RPC("StartVictoryAnimations", PhotonTargets.All);
-    }
-
-    [PunRPC]
-    public void StartVictoryAnimations()
-    {
-        StartCoroutine(OnVictory());
-    }
-
-    IEnumerator OnVictory()
-    {
-        yield return new WaitForSeconds(1);
-        AudioManager.instance.PlayHurraySound();
-        yield return new WaitForSeconds(1);
-        //AudioManager.instance.PlayFireworksSound();
-        //Instantiate(Resources.Load<GameObject>("Fireworks"), Vector3.up * 30, Quaternion.identity);
-        yield return new WaitForSeconds(3);
-        AudioManager.instance.StopBackgroundMusic();
-        yield return new WaitForSeconds(1);
-        AudioManager.instance.PlayVictorySound();
-
-        SpriteRenderer endGamePanel = thisPlayer.transform.Find("BlackPanel").GetComponent<SpriteRenderer>();
-        endGamePanel.color = Color.black;
-        yield return new WaitForSeconds(4);
-        SceneManager.LoadScene("MainMenu");
     }
 
     protected override void SetUpGame()

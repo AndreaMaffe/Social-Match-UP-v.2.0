@@ -13,20 +13,14 @@ public class FixingGameManager : GameManager
     Transform pieces;
     Transform brokenPieces;
 
-    int numberOfFixedPieces;
+    int numberOfFixedPieces; //needed to keep count of players progress and launch the victory animations if all objects are fixed
 
     private void Start()
     {
         AudioManager.instance.PlayBackgroundMusic();
         numberOfFixedPieces = 0;
-        pieces = GameObject.Find("Pieces").transform;
-        brokenPieces = GameObject.Find("BrokenPieces").transform;
-    }
-
-    [PunRPC]
-    public void StartVictoryAnimations()
-    {
-        StartCoroutine(OnVictory());
+        pieces = GameObject.Find("Pieces").transform; //all the "fixing" pieces in the scene
+        brokenPieces = GameObject.Find("BrokenPieces").transform; //all the broken pieces in the scene
     }
 
     [PunRPC]
@@ -63,14 +57,14 @@ public class FixingGameManager : GameManager
 
     IEnumerator Fix(string pieceName)
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(3);
 
-        PhotonNetwork.Destroy(pieces.Find(pieceName).gameObject.GetPhotonView()); //make the fixer piece disappear
-        brokenPieces.Find(pieceName).gameObject.GetPhotonView().RPC("Fix", PhotonTargets.All); //fix the object
+        PhotonNetwork.Destroy(pieces.Find(pieceName).gameObject.GetPhotonView()); //make the "fixing" piece disappear
+        brokenPieces.Find(pieceName).gameObject.GetPhotonView().RPC("Fix", PhotonTargets.All); //make the "fixed" object appear
 
         AudioManager.instance.PlayDingSound();
 
-        numberOfFixedPieces++;
+        numberOfFixedPieces++; 
 
         if (numberOfFixedPieces == 4)
             this.gameObject.GetPhotonView().RPC("StartVictoryAnimations", PhotonTargets.All); //spostare sul player

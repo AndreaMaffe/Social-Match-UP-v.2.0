@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//class for each avatar available in the ChangingRoom, provides methods to check when the player is looking at it 
+//and to save the player selection
 public class ChoosableAvatar : MonoBehaviour
 {
     private ChangingRomManager manager;
-    public bool Active { get; set; } //true if the avatar can be chosen, it is set to false when the avatar is chosed
+    public bool Active { get; set; } //true if the avatar can be chosen, set to false when the avatar is chosen
 
     private void Start()
     {
@@ -13,17 +15,20 @@ public class ChoosableAvatar : MonoBehaviour
         Active = true;
     }
 
+    //called when the player starts looking at the object
     public void OnGazeEnter()
     {
         if (Active)
             StartCoroutine("ChooseAvatar");
     }
 
+    //called when the player stops looking at the object
     public void OnGazeExit()
     {
         StopAllCoroutines();
     }
 
+    //wait a few seconds, then notifies the ChangingRoomManager of the choice and substitutes the avatar with the base avatar
     IEnumerator ChooseAvatar()
     {
         yield return new WaitForSeconds(2);

@@ -75,7 +75,7 @@ namespace POpusCodec
 
         public static IntPtr opus_encoder_create(SamplingRate Fs, Channels channels, OpusApplicationType application)
         {
-            int size = Wrapper.opus_encoder_get_size(Channels.Mono);
+            int size = Wrapper.opus_encoder_get_size(channels);
             IntPtr ptr = Marshal.AllocHGlobal(size);
 
             OpusStatusCode statusCode = Wrapper.opus_encoder_init(ptr, Fs, channels, application);

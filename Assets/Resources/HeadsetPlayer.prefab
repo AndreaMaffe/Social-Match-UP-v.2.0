@@ -25,9 +25,10 @@ GameObject:
   - component: {fileID: 114277893759198096}
   - component: {fileID: 114535471017098418}
   - component: {fileID: 114375339693338390}
-  - component: {fileID: 82236251578898024}
-  - component: {fileID: 114631564370254106}
-  - component: {fileID: 114826431477514336}
+  - component: {fileID: 82942945113254014}
+  - component: {fileID: 114257615340195414}
+  - component: {fileID: 114349643952133240}
+  - component: {fileID: 114188680042002076}
   m_Layer: 0
   m_Name: HeadsetPlayer
   m_TagString: MainCamera
@@ -1082,7 +1083,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1165393671488712}
   m_Mesh: {fileID: 4300006, guid: df67739dd4bef414f82867a0e32041de, type: 3}
---- !u!82 &82236251578898024
+--- !u!82 &82942945113254014
 AudioSource:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1203,6 +1204,29 @@ MonoBehaviour:
   instantiationId: -1
   currentMasterID: -1
   isRuntimeInstantiated: 0
+--- !u!114 &114188680042002076
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1030270514445030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9aa44159a206d5e4bb7776040feedd8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  updateInterval: 1
+--- !u!114 &114257615340195414
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1030270514445030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc001952a941c2743a3739a35bf9c162, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114277893759198096
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1214,6 +1238,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a15299dd87449c14295cf36f465dc398, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114349643952133240
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1030270514445030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b23b644f2525c1c4a9fd5b77d9505148, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Source: 0
+  MicrophoneType: 0
+  TypeConvert: 0
+  AudioClip: {fileID: 0}
+  LoopAudioClip: 1
 --- !u!114 &114375339693338390
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1317,17 +1357,6 @@ MonoBehaviour:
     InterpolateOption: 0
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 0
---- !u!114 &114631564370254106
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1030270514445030}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc001952a941c2743a3739a35bf9c162, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114632629328974626
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1346,22 +1375,6 @@ MonoBehaviour:
   reticleSegments: 20
   reticleGrowthSpeed: 8
   reticleSortingOrder: 32767
---- !u!114 &114826431477514336
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1030270514445030}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b23b644f2525c1c4a9fd5b77d9505148, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Source: 0
-  MicrophoneType: 0
-  TypeConvert: 0
-  AudioClip: {fileID: 0}
-  LoopAudioClip: 1
 --- !u!136 &136219779505172314
 CapsuleCollider:
   m_ObjectHideFlags: 1

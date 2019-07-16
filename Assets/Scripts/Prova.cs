@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class Prova : MonoBehaviour
 {
-
 	void Start ()
     {
+        //GameObject p = Instantiate(Resources.Load<GameObject>("PhotonVoice"));
+        //p.AddComponent<PhotonVoiceRecorder>();
+
         try
         {
             PhotonNetwork.ConnectUsingSettings("1");
@@ -35,6 +37,6 @@ public class Prova : MonoBehaviour
     public void OnJoinedRoom()
     {
         Debug.Log("Numero di giocatori: " + PhotonNetwork.room.PlayerCount);
-        PhotonNetwork.Instantiate("NetworkCube", new Vector3(0, 4, 0), Quaternion.identity, 0);
+        PhotonNetwork.Instantiate("NetworkCube", new Vector3(Random.Range(-3,3), 3, 0), Quaternion.identity, 0);
     }
 }

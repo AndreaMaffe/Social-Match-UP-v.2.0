@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 114673422326025742}
   - component: {fileID: 114125113912139410}
   m_Layer: 5
-  m_Name: OrderingGameManager
+  m_Name: SortingGameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

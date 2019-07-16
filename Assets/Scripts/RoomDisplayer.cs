@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//used in the JoinGame Scene. Simply creates a JoinRoomButton for each open room available, and refreshes every 2 seconds.
 public class RoomDisplayer : MonoBehaviour
 {
     private float timer;
@@ -13,7 +14,7 @@ public class RoomDisplayer : MonoBehaviour
         DisplayRooms();
     }
 
-    //Update the room status every 2 seconds
+    //Refresh every 2 seconds
     private void Update()
     {
         timer += Time.deltaTime;
@@ -24,6 +25,7 @@ public class RoomDisplayer : MonoBehaviour
         }
     }
 
+    //Gets info about rooms in the PhotonManager and creates a JoinRoomButton prefab for each one of them
     private void DisplayRooms()
     {
         foreach (GameObject roomButton in GameObject.FindGameObjectsWithTag("JoinRoomButton"))

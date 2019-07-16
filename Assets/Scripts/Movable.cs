@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//utility script to move objects by keyboard
 public class Movable : MonoBehaviour
 {
     void Update()

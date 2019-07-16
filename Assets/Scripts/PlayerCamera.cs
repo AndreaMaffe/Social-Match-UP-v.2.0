@@ -2,15 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerCamera : MonoBehaviour {
-
-    //private RectTransform rectTransform;
-
-    private void Start()
-    {
-        //rectTransform = GetComponent<RectTransform>();
-    }
-
+//used to control the player in debugging phase. Useless in VR
+public class PlayerCamera : MonoBehaviour
+{
     void Update ()
     {
         if (Input.GetKey(KeyCode.W))
