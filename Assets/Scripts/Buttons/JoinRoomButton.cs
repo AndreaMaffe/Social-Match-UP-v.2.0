@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//encapsulates logic of the JoinRoomButton in the JoinGameMenu. Once clicked, it connects to that specific room
+//and create the waiting animation
 public class JoinRoomButton : MonoBehaviour
 {
     private Text text;

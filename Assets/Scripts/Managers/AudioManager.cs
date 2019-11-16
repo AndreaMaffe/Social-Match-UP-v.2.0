@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Manager of all audio effects of the game. Keeps the different AudioClips as attributes and provides methods to play them as needed
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance = null;

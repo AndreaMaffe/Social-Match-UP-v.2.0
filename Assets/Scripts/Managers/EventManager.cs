@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR;
 
+//"Support" manager: provides methods to be called when some events in the game occur.
 public class EventManager : MonoBehaviour
 {
     public void OnBackToMainMenuButtonClicked()

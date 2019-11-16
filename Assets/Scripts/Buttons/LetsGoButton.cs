@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+//VERY IMPORTANT class: used for the "Let's Go" button in the new game menu. Once the button is clicked, it recollects 
+//game parameters by reading the field in the menu buttons and send this data to the PhotonManager to create a new game room.
 public class LetsGoButton : MonoBehaviour
 {
     private string playerName, task, location, imagesType, numberOfImages;
